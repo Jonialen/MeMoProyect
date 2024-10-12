@@ -2,6 +2,8 @@ package com.epicapp.memo.ui.editMemory.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -22,12 +24,18 @@ fun MemoryEditScreen(
     onConfirmClick: () -> Unit = {},
     onCancelClick: () -> Unit = {}
 ) {
-    Column {
-        Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -41,16 +49,15 @@ fun MemoryEditScreen(
                     )
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        Image(
-                            painter = rememberAsyncImagePainter(memory.imageUrl),
-                            contentDescription = "Memory Image",
-                            modifier = Modifier
-                                .size(120.dp)
-                                .padding(end = 16.dp),
-                            contentScale = ContentScale.Crop
-                        )
-
                         Column(modifier = Modifier.weight(1f)) {
+                            Image(
+                                painter = rememberAsyncImagePainter(memory.imageUrl),
+                                contentDescription = "Memory Image",
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .padding(end = 16.dp),
+                                contentScale = ContentScale.Crop
+                            )
                             OutlinedTextField(
                                 value = memory.date,
                                 onValueChange = { /* Update date */ },
@@ -59,7 +66,8 @@ fun MemoryEditScreen(
                                     .fillMaxWidth()
                                     .padding(bottom = 4.dp)
                             )
-
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
                             OutlinedTextField(
                                 value = memory.description,
                                 onValueChange = { /* Update description */ },
@@ -80,15 +88,27 @@ fun MemoryEditScreen(
                 }
             }
         }
-        Row {
-            IconButton(onClick = onConfirmClick) {
-                Icon(Icons.Filled.Check, contentDescription = "Confirm Edit")
-            }
-            IconButton(onClick = onCancelClick) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                onClick = onCancelClick,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+            ) {
                 Icon(Icons.Filled.Close, contentDescription = "Cancel Edit")
+                Spacer(Modifier.width(8.dp))
+                Text("Cancel")
+            }
+            Button(onClick = onConfirmClick) {
+                Icon(Icons.Filled.Check, contentDescription = "Confirm Edit")
+                Spacer(Modifier.width(8.dp))
+                Text("Confirm")
             }
         }
-
     }
 }
 
@@ -98,8 +118,6 @@ fun MemoryScreenPreview() {
     MeMoTheme {
         val memory = Memory("1", "Memory 1", "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.", "https://via.placeholder.com/150", "Song 1", "2023-01-01")
 
-        Column {
-            MemoryEditScreen(memory = memory)
-        }
+        MemoryEditScreen(memory = memory)
     }
 }
