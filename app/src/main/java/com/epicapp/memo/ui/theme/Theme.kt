@@ -257,6 +257,7 @@ fun MeMoTheme(
     useDarkTheme: Boolean =  isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+
     val context = LocalContext.current
     val colors = when {
         (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
@@ -269,7 +270,8 @@ fun MeMoTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content,
+        typography = TestTypography
     )
 }
 

@@ -1,3 +1,5 @@
+package com.epicapp.memo.ui.singin.view
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,10 +10,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter // Cambié a rememberAsyncImagePainter
+import com.epicapp.memo.ui.allmemories.view.Memory
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 @Composable
-fun LoginScreen(
+fun SingIn(
     onLoginClick: () -> Unit,
     onCreateAccountClick: () -> Unit
 ) {
@@ -35,6 +38,15 @@ fun LoginScreen(
             value = "", // Placeholder for username
             onValueChange = {},
             label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            value = "", // Placeholder for username
+            onValueChange = {},
+            label = { Text("Mail") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -69,7 +81,7 @@ fun LoginScreen(
 fun DetailMemoryScreenPreview() {
     MeMoTheme{
 
-        LoginScreen(onLoginClick = { /*TODO*/ }) {
+        SingIn(onLoginClick = { /*TODO*/ }) {
     }
 
     }

@@ -12,6 +12,8 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
+import com.epicapp.memo.ui.theme.MeMoTheme
 
 @Composable
 fun MenuScreen(
@@ -71,5 +73,18 @@ fun MenuScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Text("Cerrar sesión")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MenuScreenPreview() {
+    MeMoTheme {
+        MenuScreen(
+            onProfileClick = { },
+            onExportClick = { },
+            onImportClick = { },
+            onLogoutClick = { }
+        )
     }
 }

@@ -3,11 +3,13 @@ package com.epicapp.memo.ui.allmemories.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -18,9 +20,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.epicapp.memo.ui.theme.MeMoTheme
 
 data class Memory(
-    val id: String, // Identificador único para cada memoria
+    val id: String,
     val title: String,
     val description: String,
     val imageUrl: String,
@@ -32,7 +35,7 @@ data class Memory(
 fun MemoryCard(memory: Memory, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(150.dp)
             .clickable(onClick = onClick)
             .padding(8.dp)
     ) {
@@ -42,11 +45,20 @@ fun MemoryCard(memory: Memory, onClick: () -> Unit) {
                 contentDescription = "Memory Image",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp),
+                    .height(100.dp),
                 contentScale = ContentScale.Crop
             )
-            Text(text = memory.title, style = MaterialTheme.typography.titleMedium)
+            Text(text = memory.title, style = MaterialTheme.typography.titleSmall)
             Text(text = memory.date, style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
+fun MemoriesRow(memories: List<Memory>, onMemoryClick: (Memory) -> Unit) {
+    LazyRow {
+        items(memories) { memory ->
+            MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
         }
     }
 }
@@ -58,7 +70,12 @@ fun AllMemoriesScreen(
     onMemoryClick: (Memory) -> Unit,
     onAddMemoryClick: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
         Text(
             text = "Memorias Favoritas",
             style = MaterialTheme.typography.titleLarge,
@@ -67,7 +84,7 @@ fun AllMemoriesScreen(
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.height(300.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
             items(favoriteMemories, key = { it.id }) { memory ->
@@ -83,20 +100,25 @@ fun AllMemoriesScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(allMemories, key = { it.id }) { memory ->
-                MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
+        // Primera fila de memorias
+        MemoriesRow(memories = allMemories.take(allMemories.size / 2), onMemoryClick = onMemoryClick)
 
-        FloatingActionButton(
-            onClick = onAddMemoryClick,
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Segunda fila de memorias
+        MemoriesRow(memories = allMemories.drop(allMemories.size / 2), onMemoryClick = onMemoryClick)
+
+        Box(
             modifier = Modifier
-                .align(Alignment.End)
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Icon(Icons.Filled.Add, contentDescription = "Add Memory")
+            FloatingActionButton(
+                onClick = onAddMemoryClick,
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add Memory")
+            }
         }
     }
 }
@@ -104,25 +126,30 @@ fun AllMemoriesScreen(
 @Preview(showBackground = true)
 @Composable
 fun AllMemoriesScreenPreview() {
-    val favoriteMemories = listOf(
-        Memory("1", "Favorite Memory 1", "Description 1", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
-        Memory("2", "Favorite Memory 2", "Description 2", "https://via.placeholder.com/150", "Song 2", "2023-01-02"),
-        Memory("3", "Favorite Memory 3", "Description 3", "https://via.placeholder.com/150", "Song 3", "2023-01-03"),
-        Memory("4", "Favorite Memory 4", "Description 4", "https://via.placeholder.com/150", "Song 4", "2023-01-04"),
-        Memory("5", "Favorite Memory 5", "Description 5", "https://via.placeholder.com/150", "Song 5", "2023-01-05"),
-        Memory("6", "Favorite Memory 6", "Description 6", "https://via.placeholder.com/150", "Song 6", "2023-01-06"),
-    )
+    MeMoTheme {
+        val favoriteMemories = listOf(
+            Memory("1", "Favorite Memory 1", "Description 1", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
+            Memory("2", "Favorite Memory 2", "Description 2", "https://via.placeholder.com/150", "Song 2", "2023-01-02"),
+            Memory("3", "Favorite Memory 3", "Description 3", "https://via.placeholder.com/150", "Song 3", "2023-01-03"),
+            Memory("4", "Favorite Memory 4", "Description 4", "https://via.placeholder.com/150", "Song 4", "2023-01-04"),
+            Memory("5", "Favorite Memory 5", "Description 5", "https://via.placeholder.com/150", "Song 5", "2023-01-05"),
+            Memory("6", "Favorite Memory 6", "Description 6", "https://via.placeholder.com/150", "Song 6", "2023-01-06"),
+        )
 
-    val allMemories = listOf(
-        Memory("7", "Memory 1", "Description 1", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
-        Memory("8", "Memory 2", "Description 2", "https://via.placeholder.com/150", "Song 2", "2023-01-02"),
-    )
+        val allMemories = listOf(
+            Memory("7", "Memory 1", "Description 1", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
+            Memory("8", "Memory 2", "Description 2", "https://via.placeholder.com/150", "Song 2", "2023-01-02"),
+            Memory("9", "Memory 3", "Description 3", "https://via.placeholder.com/150", "Song 3", "2023-01-03"),
+            Memory("10", "Memory 4", "Description 4", "https://via.placeholder.com/150", "Song 4", "2023-01-04"),
+            Memory("11", "Memory 5", "Description 5", "https://via.placeholder.com/150", "Song 5", "2023-01-05"),
+            Memory("12", "Memory 6", "Description 6", "https://via.placeholder.com/150", "Song 6", "2023-01-06"),
+        )
 
-    AllMemoriesScreen(
-        favoriteMemories = favoriteMemories,
-        allMemories = allMemories,
-        onMemoryClick = {},
-        onAddMemoryClick = {}
-    )
+        AllMemoriesScreen(
+            favoriteMemories = favoriteMemories,
+            allMemories = allMemories,
+            onMemoryClick = {},
+            onAddMemoryClick = {}
+        )
+    }
 }
-
