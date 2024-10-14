@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.epicapp.memo.navegacion.view.CustomNavBar
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 data class Memory(
@@ -76,6 +77,8 @@ fun AllMemoriesScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        CustomNavBar()
+
         Text(
             text = "Memorias Favoritas",
             style = MaterialTheme.typography.titleLarge,
