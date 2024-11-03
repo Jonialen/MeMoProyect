@@ -12,6 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -69,7 +71,9 @@ fun AllMemoriesScreen(
     favoriteMemories: List<Memory>,
     allMemories: List<Memory>,
     onMemoryClick: (Memory) -> Unit,
-    onAddMemoryClick: () -> Unit
+    onAddMemoryClick: () -> Unit,
+    onHeartClick: () -> Unit,
+    onProfileClick: () -> Unit // Nueva función para manejar el clic en el ícono de perfil
 ) {
     Column(
         modifier = Modifier
@@ -78,6 +82,25 @@ fun AllMemoriesScreen(
             .verticalScroll(rememberScrollState())
     ) {
         CustomNavBar()
+
+        // Agregar ícono de perfil en la parte superior derecha
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(
+                onClick = onHeartClick,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Icon(Icons.Filled.Favorite, contentDescription = "Go to Favorites")
+            }
+            IconButton(
+                onClick = onProfileClick, // Navegar a MenuScreen al hacer clic en el ícono de perfil
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Icon(Icons.Filled.Person, contentDescription = "Profile Icon")
+            }
+        }
 
         Text(
             text = "Memorias Favoritas",
@@ -152,7 +175,9 @@ fun AllMemoriesScreenPreview() {
             favoriteMemories = favoriteMemories,
             allMemories = allMemories,
             onMemoryClick = {},
-            onAddMemoryClick = {}
+            onAddMemoryClick = {},
+            onHeartClick = {},
+            onProfileClick = {}
         )
     }
 }

@@ -19,7 +19,7 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 @Composable
 fun MemoryViewScreen(
     memory: Memory,
-    onEditClick: () -> Unit = {}
+    onEditClick: () -> Unit // Recibe la función onEditClick como parámetro para manejar la navegación
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
@@ -30,7 +30,7 @@ fun MemoryViewScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = memory.title,
+                    text = memory.title.ifBlank { "Sin título" },
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -47,24 +47,24 @@ fun MemoryViewScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = memory.date,
+                            text = memory.date.ifBlank { "Fecha desconocida" },
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
 
                         Text(
-                            text = memory.description,
+                            text = memory.description.ifBlank { "Descripción no disponible" },
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
 
                         Button(
-                            onClick = { /* Play music */ },
+                            onClick = { /* Aquí puedes agregar lógica para reproducir la canción */ },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Icon(Icons.TwoTone.Notifications, contentDescription = "Play Music")
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = memory.songTitle)
+                            Text(text = memory.songTitle.ifBlank { "Canción desconocida" })
                         }
                     }
                 }
@@ -72,7 +72,7 @@ fun MemoryViewScreen(
         }
 
         FloatingActionButton(
-            onClick = onEditClick,
+            onClick = onEditClick, // Llama a onEditClick cuando se presiona el botón de edición
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -86,8 +86,11 @@ fun MemoryViewScreen(
 @Composable
 fun MemoryScreensPreview() {
     MeMoTheme {
-        val memory = Memory("1", "Memory 1", "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.", "https://via.placeholder.com/150", "Song 1", "2023-01-01")
+        val memory = Memory("1", "Memory 1", "Esta es una descripción más larga para la primera memoria para mostrar cómo se ajusta el texto.", "https://via.placeholder.com/150", "Song 1", "2023-01-01")
 
-        MemoryViewScreen(memory = memory)
+        MemoryViewScreen(
+            memory = memory,
+            onEditClick = {} // Acción de edición para la vista previa
+        )
     }
 }
