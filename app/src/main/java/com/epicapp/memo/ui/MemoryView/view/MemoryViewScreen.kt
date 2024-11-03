@@ -90,7 +90,7 @@ fun MemoryScreensPreview() {
 
         MemoryViewScreen(
             memory = memory,
-            onEditClick = {} // Acción de edición para la vista previa
+            onEditClick = {}
         )
     }
 }
