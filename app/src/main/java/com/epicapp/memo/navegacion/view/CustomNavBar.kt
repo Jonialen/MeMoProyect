@@ -31,7 +31,7 @@ fun CustomNavBar(
             .fillMaxWidth()
             .height(56.dp),
         navigationIcon = {
-            IconButton(onClick = onHeartClick) {  // Cambiado para que use el parámetro
+            IconButton(onClick = onHeartClick) {
                 Icon(
                     Icons.Rounded.Favorite,
                     contentDescription = "Favorito",

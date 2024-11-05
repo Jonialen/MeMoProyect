@@ -49,7 +49,7 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
 
     composable("menu") {
         MenuScreen(
-            onProfileClick = { /* Puedes implementar la navegación a otra pantalla de perfil si es necesario */ },
+            onProfileClick = { /* Implementa navegación al perfil si es necesario */ },
             onExportClick = { /* Lógica para exportar */ },
             onImportClick = { /* Lógica para importar */ },
             onLogoutClick = { navController.navigate("login") } // Navegar a la pantalla de inicio de sesión

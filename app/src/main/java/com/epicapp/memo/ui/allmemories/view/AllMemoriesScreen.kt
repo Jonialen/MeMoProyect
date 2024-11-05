@@ -71,8 +71,8 @@ fun AllMemoriesScreen(
     onMemoryClick: (Memory) -> Unit,
     onAddMemoryClick: () -> Unit,
     onDotClick: () -> Unit,
-    onHeartClick: () -> Unit, // Navegar a detalles al hacer clic
-    onProfileClick: () -> Unit // Navegar al menú al hacer clic en el perfil
+    onHeartClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -81,9 +81,9 @@ fun AllMemoriesScreen(
             .verticalScroll(rememberScrollState())
     ) {
         CustomNavBar(
-            onHeartClick = onHeartClick, // Navega a detalle de memorias
-            onProfileClick = onProfileClick, // Navega al menú
-            onDotClick = onDotClick // Navega a la pantalla de detalles
+            onHeartClick = onHeartClick,
+            onProfileClick = onProfileClick,
+            onDotClick = onDotClick
         )
 
         Text(

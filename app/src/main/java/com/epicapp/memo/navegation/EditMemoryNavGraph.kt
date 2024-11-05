@@ -7,17 +7,9 @@ import com.epicapp.memo.ui.editMemory.view.MemoryEditScreen
 import com.epicapp.memo.ui.allmemories.view.Memory
 
 fun NavGraphBuilder.editMemoryNavGraph(navController: NavHostController) {
-    composable("editMemory/{memoryId}") { backStackEntry ->
-        val memoryId = backStackEntry.arguments?.getString("memoryId")
+    composable("editMemory") {
         MemoryEditScreen(
-            memory = Memory(
-                id = memoryId ?: "",
-                title = "",
-                description = "",
-                imageUrl = "",
-                songTitle = "",
-                date = ""
-            ),
+            memory = Memory("", "", "", "", "", ""), // Usar memoria vacía para nueva memoria
             onConfirmClick = { /* Lógica para confirmar la edición */ },
             onCancelClick = { navController.popBackStack() }
         )
