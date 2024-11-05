@@ -5,6 +5,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.epicapp.memo.ui.allmemories.view.AllMemoriesScreen
 import com.epicapp.memo.ui.allmemories.view.Memory
+import com.epicapp.memo.ui.detailmemories.view.DetailMemoriesScreen
 
 fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
     val favoriteMemories = listOf(
@@ -30,8 +31,16 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
             favoriteMemories = favoriteMemories,
             allMemories = allMemories,
             onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
-            onAddMemoryClick = { navController.navigate("editMemory") }, // Cambia a la pantalla de edición
-            onDotClick = { navController.navigate("detailMemories") } // Cambia a la pantalla de detalles
+            onAddMemoryClick = { navController.navigate("editMemory") },
+            onDotClick = { navController.navigate("detailMemories") } // Navega a detalle de memorias
+        )
+    }
+
+    composable("detailMemories") {
+        DetailMemoriesScreen(
+            allMemories = allMemories, // Pasa la lista de memorias
+            onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
+            onAddMemoryClick = { navController.navigate("editMemory") }
         )
     }
 }

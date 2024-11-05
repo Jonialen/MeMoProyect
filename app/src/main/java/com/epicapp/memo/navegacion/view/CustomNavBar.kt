@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 fun CustomNavBar(
     onHeartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onDotClick: () -> Unit // Agregado para manejar el clic en el punto negro
+    onDotClick: () -> Unit
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -26,9 +26,7 @@ fun CustomNavBar(
             titleContentColor = Color.Black,
             actionIconContentColor = Color.Black
         ),
-        title = {
-            Text(text = "")
-        },
+        title = { Text(text = "") },
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -46,7 +44,6 @@ fun CustomNavBar(
                 modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Punto negro central
                 IconButton(onClick = onDotClick) {
                     Box(
                         modifier = Modifier
@@ -57,7 +54,6 @@ fun CustomNavBar(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Icono de perfil
                 IconButton(onClick = onProfileClick) {
                     Icon(
                         Icons.Filled.Person,

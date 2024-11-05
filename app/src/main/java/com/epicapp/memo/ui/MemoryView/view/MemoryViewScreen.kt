@@ -19,7 +19,7 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 @Composable
 fun MemoryViewScreen(
     memory: Memory,
-    onEditClick: () -> Unit // Recibe la función onEditClick como parámetro para manejar la navegación
+    onEditClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
@@ -72,7 +72,7 @@ fun MemoryViewScreen(
         }
 
         FloatingActionButton(
-            onClick = onEditClick, // Llama a onEditClick cuando se presiona el botón de edición
+            onClick = onEditClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)

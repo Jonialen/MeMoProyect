@@ -58,7 +58,7 @@ fun MemoryCard(memory: Memory, onClick: () -> Unit) {
 @Composable
 fun MemoriesRow(memories: List<Memory>, onMemoryClick: (Memory) -> Unit) {
     LazyRow {
-        items(memories) { memory ->  // Aquí aseguramos que 'memory' sea de tipo Memory
+        items(memories) { memory ->
             MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
         }
     }
@@ -70,7 +70,7 @@ fun AllMemoriesScreen(
     allMemories: List<Memory>,
     onMemoryClick: (Memory) -> Unit,
     onAddMemoryClick: () -> Unit,
-    onDotClick: () -> Unit // Asegúrate de incluir este parámetro
+    onDotClick: () -> Unit // Incluye este parámetro
 ) {
     Column(
         modifier = Modifier
@@ -78,11 +78,10 @@ fun AllMemoriesScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        // Llamada a CustomNavBar con el nuevo parámetro
         CustomNavBar(
-            onHeartClick = { /* Lógica para el corazón */ },
-            onProfileClick = { /* Lógica para el perfil */ },
-            onDotClick = onDotClick // Pasa onDotClick aquí
+            onHeartClick = { /* Navegar a detalle de memorias si es necesario */ },
+            onProfileClick = { /* Navegar a menú */ },
+            onDotClick = onDotClick // Pasa el onDotClick aquí
         )
 
         Text(
@@ -109,12 +108,10 @@ fun AllMemoriesScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Primera fila de memorias
         MemoriesRow(memories = allMemories.take(allMemories.size / 2), onMemoryClick = onMemoryClick)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Segunda fila de memorias
         MemoriesRow(memories = allMemories.drop(allMemories.size / 2), onMemoryClick = onMemoryClick)
 
         Box(
@@ -123,7 +120,7 @@ fun AllMemoriesScreen(
                 .padding(16.dp)
         ) {
             FloatingActionButton(
-                onClick = onAddMemoryClick,
+                onClick = onAddMemoryClick, // Cambia a la pantalla de edición
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Memory")
@@ -157,9 +154,9 @@ fun AllMemoriesScreenPreview() {
         AllMemoriesScreen(
             favoriteMemories = favoriteMemories,
             allMemories = allMemories,
-            onMemoryClick = {},
-            onAddMemoryClick = {},
-            onDotClick = {}
+            onMemoryClick = { /* Acciones al hacer clic en la memoria */ },
+            onAddMemoryClick = { /* Acciones al hacer clic en agregar memoria */ },
+            onDotClick = { /* Acciones al hacer clic en el punto negro */ }
         )
     }
 }
