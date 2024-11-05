@@ -18,7 +18,7 @@ fun NavGraphBuilder.editMemoryNavGraph(navController: NavHostController) {
                 songTitle = "",
                 date = ""
             ),
-            onConfirmClick = { /* Confirm action */ },
+            onConfirmClick = { /* Lógica para confirmar la edición */ },
             onCancelClick = { navController.popBackStack() }
         )
     }

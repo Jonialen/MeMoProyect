@@ -30,8 +30,8 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
             favoriteMemories = favoriteMemories,
             allMemories = allMemories,
             onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
-            onAddMemoryClick = { navController.navigate("menu") },
-            onDotClick = { navController.navigate("detailMemories") } // Lógica de navegación para el punto negro
+            onAddMemoryClick = { navController.navigate("editMemory") }, // Cambia a la pantalla de edición
+            onDotClick = { navController.navigate("detailMemories") } // Cambia a la pantalla de detalles
         )
     }
 }
