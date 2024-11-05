@@ -19,7 +19,7 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 @Composable
 fun MemoryViewScreen(
     memory: Memory,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit // Función añadida para manejar el clic en el ícono del lápiz
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
@@ -72,7 +72,7 @@ fun MemoryViewScreen(
         }
 
         FloatingActionButton(
-            onClick = onEditClick,
+            onClick = onEditClick, // Llamar a la función al hacer clic
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)

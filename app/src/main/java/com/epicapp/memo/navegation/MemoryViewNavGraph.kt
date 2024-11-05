@@ -18,7 +18,7 @@ fun NavGraphBuilder.memoryViewNavGraph(navController: NavHostController) {
                 songTitle = "Canción de ejemplo",
                 date = "Fecha de ejemplo"
             ),
-            onEditClick = { navController.navigate("editMemory/$memoryId") } // Navegar a la edición
+            onEditClick = { navController.navigate("editMemory/$memoryId") } // Navegación al hacer clic en el ícono del lápiz
         )
     }
 }
