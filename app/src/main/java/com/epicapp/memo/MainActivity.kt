@@ -18,8 +18,8 @@ class MainActivity : ComponentActivity() {
                 memoryViewNavGraph(navController)
                 menuNavGraph(navController)
                 editMemoryNavGraph(navController)
+                profileNavGraph(navController) // Agregada la navegación al perfil
             }
         }
     }
 }
-

@@ -31,7 +31,7 @@ fun MenuScreen(
         Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(bottom = 16.dp))
 
         Button(
-            onClick = onProfileClick,
+            onClick = onProfileClick, // Navegación al perfil
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(Icons.Filled.Person, contentDescription = "Profile")
