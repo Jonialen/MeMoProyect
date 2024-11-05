@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import com.epicapp.memo.ui.allmemories.view.AllMemoriesScreen
 import com.epicapp.memo.ui.allmemories.view.Memory
 import com.epicapp.memo.ui.detailmemories.view.DetailMemoriesScreen
+import com.epicapp.memo.ui.menu.view.MenuScreen
 
 fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
     val favoriteMemories = listOf(
@@ -31,16 +32,27 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
             favoriteMemories = favoriteMemories,
             allMemories = allMemories,
             onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
-            onAddMemoryClick = { navController.navigate("editMemory") },
-            onDotClick = { navController.navigate("detailMemories") } // Navega a detalle de memorias
+            onAddMemoryClick = { navController.navigate("editMemory") }, // Navegar a la pantalla de edición
+            onDotClick = { navController.navigate("detailMemories") }, // Navegar a la pantalla de detalles
+            onHeartClick = { navController.navigate("detailMemories") }, // Navegar al detalle de memorias
+            onProfileClick = { navController.navigate("menu") } // Navegar al menú
         )
     }
 
     composable("detailMemories") {
         DetailMemoriesScreen(
-            allMemories = allMemories, // Pasa la lista de memorias
+            allMemories = allMemories,
             onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
-            onAddMemoryClick = { navController.navigate("editMemory") }
+            onAddMemoryClick = { navController.navigate("editMemory") } // Navegar a la pantalla de edición desde los detalles
+        )
+    }
+
+    composable("menu") {
+        MenuScreen(
+            onProfileClick = { /* Puedes implementar la navegación a otra pantalla de perfil si es necesario */ },
+            onExportClick = { /* Lógica para exportar */ },
+            onImportClick = { /* Lógica para importar */ },
+            onLogoutClick = { navController.navigate("login") } // Navegar a la pantalla de inicio de sesión
         )
     }
 }

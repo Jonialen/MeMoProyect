@@ -70,7 +70,9 @@ fun AllMemoriesScreen(
     allMemories: List<Memory>,
     onMemoryClick: (Memory) -> Unit,
     onAddMemoryClick: () -> Unit,
-    onDotClick: () -> Unit // Incluye este parámetro
+    onDotClick: () -> Unit,
+    onHeartClick: () -> Unit, // Navegar a detalles al hacer clic
+    onProfileClick: () -> Unit // Navegar al menú al hacer clic en el perfil
 ) {
     Column(
         modifier = Modifier
@@ -79,9 +81,9 @@ fun AllMemoriesScreen(
             .verticalScroll(rememberScrollState())
     ) {
         CustomNavBar(
-            onHeartClick = { /* Navegar a detalle de memorias si es necesario */ },
-            onProfileClick = { /* Navegar a menú */ },
-            onDotClick = onDotClick // Pasa el onDotClick aquí
+            onHeartClick = onHeartClick, // Navega a detalle de memorias
+            onProfileClick = onProfileClick, // Navega al menú
+            onDotClick = onDotClick // Navega a la pantalla de detalles
         )
 
         Text(
@@ -120,7 +122,7 @@ fun AllMemoriesScreen(
                 .padding(16.dp)
         ) {
             FloatingActionButton(
-                onClick = onAddMemoryClick, // Cambia a la pantalla de edición
+                onClick = onAddMemoryClick,
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Memory")
@@ -156,7 +158,9 @@ fun AllMemoriesScreenPreview() {
             allMemories = allMemories,
             onMemoryClick = { /* Acciones al hacer clic en la memoria */ },
             onAddMemoryClick = { /* Acciones al hacer clic en agregar memoria */ },
-            onDotClick = { /* Acciones al hacer clic en el punto negro */ }
+            onDotClick = { /* Acciones al hacer clic en el punto negro */ },
+            onHeartClick = { /* Acciones al hacer clic en el corazón */ },
+            onProfileClick = { /* Acciones al hacer clic en el perfil */ }
         )
     }
 }
