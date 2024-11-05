@@ -12,8 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -60,7 +58,7 @@ fun MemoryCard(memory: Memory, onClick: () -> Unit) {
 @Composable
 fun MemoriesRow(memories: List<Memory>, onMemoryClick: (Memory) -> Unit) {
     LazyRow {
-        items(memories) { memory ->
+        items(memories) { memory ->  // Aquí aseguramos que 'memory' sea de tipo Memory
             MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
         }
     }
@@ -72,8 +70,7 @@ fun AllMemoriesScreen(
     allMemories: List<Memory>,
     onMemoryClick: (Memory) -> Unit,
     onAddMemoryClick: () -> Unit,
-    onHeartClick: () -> Unit,
-    onProfileClick: () -> Unit // Nueva función para manejar el clic en el ícono de perfil
+    onDotClick: () -> Unit // Asegúrate de incluir este parámetro
 ) {
     Column(
         modifier = Modifier
@@ -81,26 +78,12 @@ fun AllMemoriesScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        CustomNavBar()
-
-        // Agregar ícono de perfil en la parte superior derecha
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = onHeartClick,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Icon(Icons.Filled.Favorite, contentDescription = "Go to Favorites")
-            }
-            IconButton(
-                onClick = onProfileClick, // Navegar a MenuScreen al hacer clic en el ícono de perfil
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Icon(Icons.Filled.Person, contentDescription = "Profile Icon")
-            }
-        }
+        // Llamada a CustomNavBar con el nuevo parámetro
+        CustomNavBar(
+            onHeartClick = { /* Lógica para el corazón */ },
+            onProfileClick = { /* Lógica para el perfil */ },
+            onDotClick = onDotClick // Pasa onDotClick aquí
+        )
 
         Text(
             text = "Memorias Favoritas",
@@ -176,8 +159,7 @@ fun AllMemoriesScreenPreview() {
             allMemories = allMemories,
             onMemoryClick = {},
             onAddMemoryClick = {},
-            onHeartClick = {},
-            onProfileClick = {}
+            onDotClick = {}
         )
     }
 }
