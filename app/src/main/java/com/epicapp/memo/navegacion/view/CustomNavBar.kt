@@ -21,11 +21,6 @@ fun CustomNavBar(
     onDotClick: () -> Unit
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFB2B6DC),
-            titleContentColor = Color.Black,
-            actionIconContentColor = Color.Black
-        ),
         title = { Text(text = "") },
         modifier = Modifier
             .fillMaxWidth()

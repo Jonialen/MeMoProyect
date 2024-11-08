@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.epicapp.memo.R
 import com.epicapp.memo.navegacion.view.CustomNavBar
 import com.epicapp.memo.ui.theme.MeMoTheme
 
@@ -42,7 +44,11 @@ fun MemoryCard(memory: Memory, onClick: () -> Unit) {
     ) {
         Column {
             Image(
-                painter = rememberAsyncImagePainter(memory.imageUrl),
+                painter = rememberAsyncImagePainter(
+                model = "https://www.mundodeportivo.com/alfabeta/hero/2024/09/south-park-2.jpg?width=1200",
+                placeholder = painterResource(R.drawable.ic_launcher_background),
+                error = painterResource(R.drawable.ic_launcher_foreground)
+                ),
                 contentDescription = "Memory Image",
                 modifier = Modifier
                     .fillMaxWidth()
