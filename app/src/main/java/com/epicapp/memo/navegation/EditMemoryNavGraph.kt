@@ -11,7 +11,7 @@ fun NavGraphBuilder.editMemoryNavGraph(navController: NavHostController) {
     // Ruta para editar una memoria existente
     composable("editMemory/{memoryId}") { backStackEntry ->
         val memoryId = backStackEntry.arguments?.getString("memoryId")
-        MeMoTheme {
+
             MemoryEditScreen(
                 memory = Memory(
                     id = memoryId ?: "",
@@ -24,16 +24,16 @@ fun NavGraphBuilder.editMemoryNavGraph(navController: NavHostController) {
                 onConfirmClick = { /* Lógica para confirmar la edición */ },
                 onCancelClick = { navController.popBackStack() } // Regresar a la pantalla anterior
             )
-        }
+
     }
     // Ruta para crear una nueva memoria
     composable("editMemory") {
-        MeMoTheme {
+
             MemoryEditScreen(
                 memory = Memory("", "", "", "", "", ""), // Memoria vacía para una nueva entrada
                 onConfirmClick = { /* Lógica para guardar la nueva memoria */ },
                 onCancelClick = { navController.popBackStack() } // Regresar a la pantalla anterior
             )
         }
-    }
+
 }
