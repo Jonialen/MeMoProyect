@@ -8,7 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 @Composable
