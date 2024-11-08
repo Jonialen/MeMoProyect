@@ -9,19 +9,19 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     composable("login") {
-        MeMoTheme {
+
             LoginScreen(
                 onLoginClick = { navController.navigate("allMemories") },
                 onCreateAccountClick = { navController.navigate("signIn") }
             )
         }
-    }
+
     composable("signIn") {
-        MeMoTheme {
+
             SingIn(
                 onLoginClick = { navController.navigate("allMemories") },
                 onCreateAccountClick = { /* Lógica para crear cuenta */ }
             )
         }
-    }
+
 }

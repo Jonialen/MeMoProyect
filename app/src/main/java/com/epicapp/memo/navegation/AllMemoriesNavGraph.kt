@@ -114,7 +114,6 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
 
 
     composable("allMemories") {
-        MeMoTheme {
             AllMemoriesScreen(
                 favoriteMemories = favoriteMemories,
                 allMemories = allMemories,
@@ -125,20 +124,20 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
                 onProfileClick = { navController.navigate("menu") }
             )
         }
-    }
+
 
     composable("detailMemories") {
-        MeMoTheme {
+
             DetailMemoriesScreen(
                 allMemories = allMemories,
                 onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
                 onAddMemoryClick = { navController.navigate("editMemory") }
             )
         }
-    }
+
 
     composable("menu") {
-        MeMoTheme {
+
             MenuScreen(
                 onProfileClick = { /* Implementa navegación al perfil si es necesario */ },
                 onExportClick = { /* Lógica para exportar */ },
@@ -147,4 +146,3 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
             )
         }
     }
-}

@@ -10,7 +10,7 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 fun NavGraphBuilder.memoryViewNavGraph(navController: NavHostController) {
     composable("memoryView/{memoryId}") { backStackEntry ->
         val memoryId = backStackEntry.arguments?.getString("memoryId")
-        MeMoTheme {
+
             MemoryViewScreen(
                 memory = Memory(
                     id = memoryId ?: "",
@@ -23,5 +23,5 @@ fun NavGraphBuilder.memoryViewNavGraph(navController: NavHostController) {
                 onEditClick = { navController.navigate("editMemory/$memoryId") } // Navegación al hacer clic en el ícono del lápiz
             )
         }
-    }
+
 }

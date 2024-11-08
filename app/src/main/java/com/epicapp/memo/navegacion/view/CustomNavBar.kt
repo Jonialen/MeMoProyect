@@ -11,7 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.epicapp.memo.ui.theme.topBarColorLight
+import com.epicapp.memo.ui.theme.topBarColorDark
+import androidx.compose.foundation.isSystemInDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,11 +24,15 @@ fun CustomNavBar(
     onProfileClick: () -> Unit,
     onDotClick: () -> Unit
 ) {
+    // Detecta si el tema actual es oscuro o claro
+    val isDarkTheme = isSystemInDarkTheme()
+
     TopAppBar(
         title = { Text(text = "") },
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .height(56.dp)
+            .background(color = if (isDarkTheme) topBarColorDark else topBarColorLight), // Cambia el color de fondo según el tema
         navigationIcon = {
             IconButton(onClick = onHeartClick) {
                 Icon(
@@ -58,5 +66,15 @@ fun CustomNavBar(
                 }
             }
         }
+    )
+}
+
+@Preview
+@Composable
+fun PreviewCustomNavBar() {
+    CustomNavBar(
+        onHeartClick = {},
+        onProfileClick = {},
+        onDotClick = {}
     )
 }

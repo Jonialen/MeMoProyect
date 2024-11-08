@@ -8,7 +8,7 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 
 fun NavGraphBuilder.menuNavGraph(navController: NavHostController) {
     composable("menu") {
-        MeMoTheme {
+
             MenuScreen(
                 onProfileClick = { navController.navigate("profile") }, // Navegación al perfil
                 onExportClick = { /* Lógica de exportación */ },
@@ -16,5 +16,5 @@ fun NavGraphBuilder.menuNavGraph(navController: NavHostController) {
                 onLogoutClick = { navController.navigate("login") } // Navegación al inicio de sesión
             )
         }
-    }
+
 }
