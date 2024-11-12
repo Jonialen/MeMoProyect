@@ -4,22 +4,26 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Delete // Icono de eliminar
 import androidx.compose.material.icons.twotone.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter  // Importación correcta
+import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.tooling.preview.Preview
+import com.epicapp.memo.R
 import com.epicapp.memo.ui.allmemories.view.Memory
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 @Composable
 fun MemoryViewScreen(
     memory: Memory,
-    onEditClick: () -> Unit // Función añadida para manejar el clic en el ícono del lápiz
+    onEditClick: () -> Unit, // Función para manejar el clic en editar
+    onDeleteClick: () -> Unit // Función para manejar el clic en eliminar
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
@@ -37,7 +41,11 @@ fun MemoryViewScreen(
 
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Image(
-                        painter = rememberAsyncImagePainter(memory.imageUrl),
+                        painter = rememberAsyncImagePainter(
+                            model = memory.imageUrl,
+                            placeholder = painterResource(R.drawable.ic_launcher_background),
+                            error = painterResource(R.drawable.ic_launcher_foreground)
+                        ),
                         contentDescription = "Memory Image",
                         modifier = Modifier
                             .size(120.dp)
@@ -71,13 +79,24 @@ fun MemoryViewScreen(
             }
         }
 
+        // Botón de editar en la parte inferior derecha
         FloatingActionButton(
-            onClick = onEditClick, // Llamar a la función al hacer clic
+            onClick = onEditClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
             Icon(Icons.Filled.Edit, contentDescription = "Edit Memory")
+        }
+
+        // Botón de eliminar en la parte inferior izquierda
+        FloatingActionButton(
+            onClick = onDeleteClick,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+        ) {
+            Icon(Icons.Filled.Delete, contentDescription = "Delete Memory")
         }
     }
 }
@@ -90,7 +109,8 @@ fun MemoryScreensPreview() {
 
         MemoryViewScreen(
             memory = memory,
-            onEditClick = {}
+            onEditClick = {},
+            onDeleteClick = {} // Función de prueba para eliminar
         )
     }
 }
