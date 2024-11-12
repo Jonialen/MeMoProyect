@@ -112,37 +112,35 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
         ),
     )
 
-
     composable("allMemories") {
-            AllMemoriesScreen(
-                favoriteMemories = favoriteMemories,
-                allMemories = allMemories,
-                onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
-                onAddMemoryClick = { navController.navigate("editMemory") },
-                onDotClick = { navController.navigate("detailMemories") },
-                onHeartClick = { navController.navigate("detailMemories") },
-                onProfileClick = { navController.navigate("menu") }
-            )
-        }
-
+        AllMemoriesScreen(
+            favoriteMemories = favoriteMemories,
+            allMemories = allMemories,
+            onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
+            onAddMemoryClick = { navController.navigate("editMemory") },
+            onDotClick = { navController.navigate("detailMemories") },
+            onHeartClick = { navController.navigate("detailMemories") },
+            onProfileClick = { navController.navigate("menu") }
+        )
+    }
 
     composable("detailMemories") {
-
-            DetailMemoriesScreen(
-                allMemories = allMemories,
-                onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
-                onAddMemoryClick = { navController.navigate("editMemory") }
-            )
-        }
-
+        DetailMemoriesScreen(
+            allMemories = allMemories,
+            onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
+            onAddMemoryClick = { navController.navigate("editMemory") },
+            onDotClick = { navController.navigate("detailMemories") },
+            onHeartClick = { navController.popBackStack("allMemories", inclusive = false) }, // Regresar a AllMemoriesScreen
+            onProfileClick = { navController.navigate("menu") }
+        )
+    }
 
     composable("menu") {
-
-            MenuScreen(
-                onProfileClick = { /* Implementa navegación al perfil si es necesario */ },
-                onExportClick = { /* Lógica para exportar */ },
-                onImportClick = { /* Lógica para importar */ },
-                onLogoutClick = { navController.navigate("login") }
-            )
-        }
+        MenuScreen(
+            onProfileClick = { /* Implementa navegación al perfil si es necesario */ },
+            onExportClick = { /* Lógica para exportar */ },
+            onImportClick = { /* Lógica para importar */ },
+            onLogoutClick = { navController.navigate("login") }
+        )
     }
+}

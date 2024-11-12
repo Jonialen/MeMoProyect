@@ -14,24 +14,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter  // Importación corregida
+import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.tooling.preview.Preview
 import com.epicapp.memo.ui.allmemories.view.Memory
 import com.epicapp.memo.ui.theme.MeMoTheme
+import com.epicapp.memo.navegacion.view.CustomNavBar  // Importación de CustomNavBar
 
 @Composable
 fun DetailMemoriesScreen(
     allMemories: List<Memory>,
     onMemoryClick: (Memory) -> Unit,
-    onAddMemoryClick: () -> Unit
+    onAddMemoryClick: () -> Unit,
+    onDotClick: () -> Unit,         // Nueva función de clic en punto
+    onHeartClick: () -> Unit,       // Nueva función de clic en corazón
+    onProfileClick: () -> Unit      // Nueva función de clic en perfil
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
+            // Agregamos el CustomNavBar en la parte superior
+            CustomNavBar(
+                onHeartClick = onHeartClick,
+                onProfileClick = onProfileClick,
+                onDotClick = onDotClick
+            )
+
             Text(
                 text = "My memories",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(16.dp)
             )
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -120,7 +132,10 @@ fun DetailMemoryScreenPreview() {
         DetailMemoriesScreen(
             allMemories = memories,
             onMemoryClick = {},
-            onAddMemoryClick = {}
+            onAddMemoryClick = {},
+            onDotClick = {},
+            onHeartClick = {},
+            onProfileClick = {}
         )
     }
 }
