@@ -1,30 +1,35 @@
 package com.epicapp.memo.ui.memoryView.view
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Delete // Icono de eliminar
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.twotone.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import androidx.compose.ui.tooling.preview.Preview
-import com.epicapp.memo.R
 import com.epicapp.memo.ui.allmemories.view.Memory
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 @Composable
 fun MemoryViewScreen(
     memory: Memory,
-    onEditClick: () -> Unit, // Función para manejar el clic en editar
-    onDeleteClick: () -> Unit // Función para manejar el clic en eliminar
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
+    Log.d("MemoryViewScreen", "URL de la imagen: ${memory.imageUrl}")
+
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
@@ -40,16 +45,31 @@ fun MemoryViewScreen(
                 )
 
                 Row(modifier = Modifier.fillMaxWidth()) {
+                    val painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(memory.imageUrl)
+                            .crossfade(true)
+                            .listener(
+                                onStart = {
+                                    Log.d("MemoryViewScreen", "Cargando la imagen...")
+                                },
+                                onSuccess = { _, _ ->
+                                    Log.d("MemoryViewScreen", "Imagen cargada exitosamente")
+                                },
+                                onError = { _, throwable ->
+                                    Log.e("MemoryViewScreen", "Error al cargar la imagen: $throwable")
+                                }
+                            )
+                            .build()
+                    )
+
                     Image(
-                        painter = rememberAsyncImagePainter(
-                            model = memory.imageUrl,
-                            placeholder = painterResource(R.drawable.ic_launcher_background),
-                            error = painterResource(R.drawable.ic_launcher_foreground)
-                        ),
+                        painter = painter,
                         contentDescription = "Memory Image",
                         modifier = Modifier
                             .size(120.dp)
-                            .padding(end = 16.dp),
+                            .padding(end = 16.dp)
+                            .background(Color.LightGray), // Fondo gris para diagnóstico
                         contentScale = ContentScale.Crop
                     )
 
@@ -79,7 +99,6 @@ fun MemoryViewScreen(
             }
         }
 
-        // Botón de editar en la parte inferior derecha
         FloatingActionButton(
             onClick = onEditClick,
             modifier = Modifier
@@ -89,7 +108,6 @@ fun MemoryViewScreen(
             Icon(Icons.Filled.Edit, contentDescription = "Edit Memory")
         }
 
-        // Botón de eliminar en la parte inferior izquierda
         FloatingActionButton(
             onClick = onDeleteClick,
             modifier = Modifier

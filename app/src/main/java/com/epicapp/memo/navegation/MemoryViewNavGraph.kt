@@ -19,7 +19,7 @@ fun NavGraphBuilder.memoryViewNavGraph(navController: NavHostController) {
         val memoryId = backStackEntry.arguments?.getString("memoryId")
 
         // Log para verificar el URL de la imagen antes de mostrarla en MemoryViewScreen
-        val memoryImageUrl = "https://via.placeholder.com/150" // URL de ejemplo
+        val memoryImageUrl = "https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2022/08/12/16603249975433.jpg" // URL de ejemplo
         Log.d("MemoryViewNavGraph", "URL de la imagen en MemoryViewScreen: $memoryImageUrl")
 
         MemoryViewScreen(
@@ -41,3 +41,5 @@ fun NavGraphBuilder.memoryViewNavGraph(navController: NavHostController) {
         )
     }
 }
+
+
