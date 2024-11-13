@@ -130,7 +130,12 @@ fun NavGraphBuilder.allMemoriesNavGraph(navController: NavHostController) {
             onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
             onAddMemoryClick = { navController.navigate("editMemory") },
             onDotClick = { navController.navigate("detailMemories") },
-            onHeartClick = { navController.popBackStack("allMemories", inclusive = false) }, // Regresar a AllMemoriesScreen
+            onHeartClick = {
+                navController.popBackStack(
+                    "allMemories",
+                    inclusive = false
+                )
+            }, // Regresar a AllMemoriesScreen
             onProfileClick = { navController.navigate("menu") }
         )
     }

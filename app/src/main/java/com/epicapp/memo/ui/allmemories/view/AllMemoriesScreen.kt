@@ -92,9 +92,9 @@ fun AllMemoriesScreen(
     ) {
         CustomNavBar(
             onHeartClick = onHeartClick,
-            onProfileClick = onProfileClick,
-            onDotClick = onDotClick
+            onProfileClick = onProfileClick
         )
+
 
         Text(
             text = "Memorias Favoritas",

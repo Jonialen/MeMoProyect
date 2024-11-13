@@ -21,8 +21,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 @Composable
 fun CustomNavBar(
     onHeartClick: () -> Unit,
-    onProfileClick: () -> Unit,
-    onDotClick: () -> Unit
+    onProfileClick: () -> Unit
 ) {
     // Detecta si el tema actual es oscuro o claro
     val isDarkTheme = isSystemInDarkTheme()
@@ -43,27 +42,12 @@ fun CustomNavBar(
             }
         },
         actions = {
-            Row(
-                modifier = Modifier.fillMaxHeight(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onDotClick) {
-                    Box(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .background(Color.Black, CircleShape)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                IconButton(onClick = onProfileClick) {
-                    Icon(
-                        Icons.Filled.Person,
-                        contentDescription = "Perfil",
-                        tint = Color.Black
-                    )
-                }
+            IconButton(onClick = onProfileClick) {
+                Icon(
+                    Icons.Filled.Person,
+                    contentDescription = "Perfil",
+                    tint = Color.Black
+                )
             }
         }
     )
@@ -74,7 +58,6 @@ fun CustomNavBar(
 fun PreviewCustomNavBar() {
     CustomNavBar(
         onHeartClick = {},
-        onProfileClick = {},
-        onDotClick = {}
+        onProfileClick = {}
     )
 }

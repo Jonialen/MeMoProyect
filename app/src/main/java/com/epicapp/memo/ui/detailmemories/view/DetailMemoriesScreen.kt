@@ -34,9 +34,9 @@ fun DetailMemoriesScreen(
             // Agregamos el CustomNavBar en la parte superior
             CustomNavBar(
                 onHeartClick = onHeartClick,
-                onProfileClick = onProfileClick,
-                onDotClick = onDotClick
+                onProfileClick = onProfileClick
             )
+
 
             Text(
                 text = "My memories",

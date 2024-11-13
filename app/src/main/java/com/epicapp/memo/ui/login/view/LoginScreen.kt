@@ -6,12 +6,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-
-import com.epicapp.memo.ui.theme.MeMoTheme
+import com.epicapp.memo.R
 
 @Composable
 fun LoginScreen(
@@ -22,47 +20,64 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
+        // Logo de la aplicación
         Image(
-            painter = rememberAsyncImagePainter("url_to_logo_image"),
+            painter = painterResource(id = R.drawable.logo_memo),
             contentDescription = "App Logo",
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier
+                .size(400.dp)
+                .padding(bottom = 32.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // Título o texto de bienvenida
+        Text(
+            text = "Welcome to MEMO",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
-        TextField(
+        // Campos de entrada (ejemplo de campo de usuario y contraseña)
+        OutlinedTextField(
             value = "",
-            onValueChange = {},
+            onValueChange = { /* TODO */ },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
+        OutlinedTextField(
             value = "",
-            onValueChange = {},
+            onValueChange = { /* TODO */ },
             label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // Botón de inicio de sesión
         Button(
             onClick = onLoginClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Next")
+            Text("Login")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
+        // Botón para crear cuenta
         TextButton(onClick = onCreateAccountClick) {
-            Text("Crear nueva cuenta")
+            Text("Create an Account")
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(
+        onLoginClick = {},
+        onCreateAccountClick = {}
+    )
 }

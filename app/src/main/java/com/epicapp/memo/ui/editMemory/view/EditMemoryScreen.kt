@@ -8,7 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,12 +18,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.epicapp.memo.ui.allmemories.view.Memory
 import com.epicapp.memo.ui.theme.MeMoTheme
 
+data class Song(
+    val id: String,
+    val title: String,
+    val artist: String
+)
+
 @Composable
 fun MemoryEditScreen(
     memory: Memory,
     onConfirmClick: () -> Unit = {},
     onCancelClick: () -> Unit = {}
 ) {
+    // Lista ficticia de canciones y artistas
+    val allSongs = listOf(
+        Song("1", "Song 1", "Artist A"),
+        Song("2", "Song 2", "Artist B"),
+        Song("3", "Song 1", "Artist C"),
+        Song("4", "Song 4", "Artist A"),
+        Song("5", "Song 5", "Artist C"),
+    )
+
+    var searchQuery by remember { mutableStateOf("") }
+    var isDropdownExpanded by remember { mutableStateOf(false) }
+
+    // Filtrar canciones según el query de búsqueda
+    val filteredSongs = allSongs.filter {
+        it.title.contains(searchQuery, ignoreCase = true) ||
+                it.artist.contains(searchQuery, ignoreCase = true)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,12 +101,34 @@ fun MemoryEditScreen(
                                     .padding(bottom = 8.dp)
                             )
 
+                            // Campo "Song Title" con búsqueda y lista desplegable
                             OutlinedTextField(
-                                value = memory.songTitle,
-                                onValueChange = { /* Update song title */ },
+                                value = searchQuery,
+                                onValueChange = { newQuery ->
+                                    searchQuery = newQuery
+                                    isDropdownExpanded = true // Mostrar el menú al escribir
+                                },
                                 label = { Text("Song Title") },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
                             )
+
+                            // Mostrar resultados de búsqueda en el DropdownMenu
+                            DropdownMenu(
+                                expanded = isDropdownExpanded && filteredSongs.isNotEmpty(),
+                                onDismissRequest = { isDropdownExpanded = false }
+                            ) {
+                                filteredSongs.forEach { song ->
+                                    DropdownMenuItem(
+                                        text = { Text("${song.title} - ${song.artist}") },
+                                        onClick = {
+                                            // Actualizar el campo de búsqueda con el título seleccionado
+                                            searchQuery = song.title
+                                            isDropdownExpanded = false // Cerrar el menú
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -108,6 +154,21 @@ fun MemoryEditScreen(
                 Spacer(Modifier.width(8.dp))
                 Text("Confirm")
             }
+        }
+    }
+}
+
+@Composable
+fun SongItem(song: Song) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(text = "Título: ${song.title}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Artista: ${song.artist}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
