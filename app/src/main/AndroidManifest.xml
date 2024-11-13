@@ -8,13 +8,13 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo_memo1"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo_memo1"
         android:supportsRtl="true"
         android:theme="@style/Theme.MeMo"
         tools:targetApi="31"
-        android:enableOnBackInvokedCallback="true"> <!-- Habilitar onBackInvokedCallback -->
+        android:enableOnBackInvokedCallback="true">
 
         <activity
             android:name=".MainActivity"
