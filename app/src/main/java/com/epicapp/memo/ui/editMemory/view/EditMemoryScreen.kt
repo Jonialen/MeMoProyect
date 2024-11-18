@@ -87,159 +87,19 @@ fun MemoryEditScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Campo para el título
-                    OutlinedTextField(
-                        value = title,
-                        onValueChange = { title = it },
-                        label = { Text("Title") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                    )
-
-                    // Campo para la descripción
-                    OutlinedTextField(
-                        value = description,
-                        onValueChange = { newDescription -> description = newDescription },
-                        label = { Text("Description") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        minLines = 3
-                    )
-
-                    // Selector de imágenes
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(bottom = 16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Log.d("MEMO_DEBUG", imageUrl)
-                        if (imageUrl.isNotEmpty()) {
-                            Image(
-                                painter = rememberAsyncImagePainter(imageUrl),
-                                contentDescription = "Memory Image",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Text(
-                                text = "No image selected",
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-
-                        if (isLoading) {
-                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                        }
-                    }
-
-                    if (uploadError != null) {
-                        Text(
-                            text = uploadError ?: "",
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-                    Button(
-                        onClick = { galleryLauncher.launch("image/*") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    ) {
-                        Text("Select Image")
-                    }
-                    // Campo para la fecha
-                    OutlinedTextField(
-                        value = date,
-                        onValueChange = { newDate -> date = newDate },
-                        label = { Text("Date") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                    )
-
-                    // Campo para seleccionar una canción
-                    ExposedDropdownMenuBox(
-                        expanded = isDropdownExpanded,
-                        onExpandedChange = { isDropdownExpanded = it }
-                    ) {
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { newQuery ->
-                                searchQuery = newQuery
-                                isDropdownExpanded = true
-                            },
-                            label = { Text("Song Title") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
-                        )
-
-                        ExposedDropdownMenu(
-                            expanded = isDropdownExpanded,
-                            onDismissRequest = { isDropdownExpanded = false }
-                        ) {
-                            filteredSongs.forEach { song ->
-                                DropdownMenuItem(
-                                    text = { Text("${song.title} - ${song.artist}") },
-                                    onClick = {
-                                        searchQuery = song.title
-                                        isDropdownExpanded = false
-                                    }
-                                )
-                            }
-                        }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Edit Memory") },
+                navigationIcon = {
+                    IconButton(onClick = onCancelClick) {
+                        Icon(Icons.Filled.Close, contentDescription = "Cancel Edit")
                     }
                 }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        // Botones de acción
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(
-                onClick = onCancelClick,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-            ) {
-                Icon(Icons.Filled.Close, contentDescription = "Cancel Edit")
-                Spacer(Modifier.width(8.dp))
-                Text("Cancel")
-            }
-
-            Button(
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
                 onClick = {
                     val updatedMemory = memory.copy(
                         title = title,
@@ -248,54 +108,147 @@ fun MemoryEditScreen(
                         songTitle = searchQuery,
                         imageUrl = imageUrl
                     )
-                    viewModel.saveMemory(updatedMemory) // Guardar la memoria usando el ViewModel
-                    onCancelClick() // Regresar al cerrar
+                    viewModel.saveMemory(updatedMemory)
+                    onConfirmClick(updatedMemory) // Llamar al callback de confirmación
                 }
             ) {
-                Icon(Icons.Filled.Check, contentDescription = "Confirm Edit")
-                Spacer(Modifier.width(8.dp))
-                Text("Confirm")
+                Icon(Icons.Filled.Check, contentDescription = "Save Memory")
+            }
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Campo para el título
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Title") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+
+            // Campo para la descripción
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Description") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                minLines = 3
+            )
+
+            // Selector de imágenes
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(bottom = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (imageUrl.isNotEmpty()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(imageUrl),
+                        contentDescription = "Memory Image",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text(
+                        text = "No image selected",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+            }
+
+            Button(
+                onClick = { galleryLauncher.launch("image/*") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text("Select Image")
+            }
+
+            // Campo para la fecha
+            OutlinedTextField(
+                value = date,
+                onValueChange = { date = it },
+                label = { Text("Date") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+
+            // Campo para seleccionar una canción
+            ExposedDropdownMenuBox(
+                expanded = isDropdownExpanded,
+                onExpandedChange = { isDropdownExpanded = it }
+            ) {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    label = { Text("Song Title") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
+                )
+
+                ExposedDropdownMenu(
+                    expanded = isDropdownExpanded,
+                    onDismissRequest = { isDropdownExpanded = false }
+                ) {
+                    filteredSongs.forEach { song ->
+                        DropdownMenuItem(
+                            text = { Text("${song.title} - ${song.artist}") },
+                            onClick = {
+                                searchQuery = song.title
+                                isDropdownExpanded = false
+                            }
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun MemoryEditScreenPreview() {
     MeMoTheme {
-        // Lista mutable de memorias ficticias
         val memoryList = mutableListOf(
             MemoryDO(
                 id = "1",
                 title = "Memory 1",
-                description = "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.",
+                description = "This is a longer description for the first memory.",
                 imageUrl = "https://via.placeholder.com/150",
                 songTitle = "Song 1",
                 date = "2023-01-01"
-            ),
-            MemoryDO(
-                id = "2",
-                title = "Memory 2",
-                description = "Another memory for testing the editing functionality.",
-                imageUrl = "https://via.placeholder.com/150",
-                songTitle = "Song 2",
-                date = "2023-01-02"
             )
         )
 
-        // Inicialización del repositorio con la lista ficticia
         val repository = com.epicapp.memo.ui.editMemory.repository.MemoryEditRepository(memoryList)
-
-        // Inicialización del ViewModel con el repositorio
         val viewModel = MemoryEditViewModel(repository)
 
-        // Pantalla de edición utilizando el ViewModel
         MemoryEditScreen(
-            memory = memoryList[0], // Memoria inicial para editar
+            memory = memoryList[0],
             viewModel = viewModel,
-            onCancelClick = { /* Acción simulada al cancelar */ }
+            onConfirmClick = { /* Simulación de confirmación */ },
+            onCancelClick = { /* Simulación de cancelación */ }
         )
     }
 }
