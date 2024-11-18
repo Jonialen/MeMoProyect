@@ -25,44 +25,46 @@ fun DetailMemoriesScreen(
     allMemories: List<MemoryDO>,
     onMemoryClick: (MemoryDO) -> Unit,
     onAddMemoryClick: () -> Unit,
-    onDotClick: () -> Unit,         // Nueva función de clic en punto
-    onHeartClick: () -> Unit,       // Nueva función de clic en corazón
-    onProfileClick: () -> Unit      // Nueva función de clic en perfil
+    onDotClick: () -> Unit,
+    onHeartClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Agregamos el CustomNavBar en la parte superior
+    Scaffold(
+        topBar = {
             CustomNavBar(
                 onHeartClick = onHeartClick,
                 onProfileClick = onProfileClick
             )
-
-
-            Text(
-                text = "My memories",
-                style = MaterialTheme.typography.titleLarge,
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddMemoryClick,
                 modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add Memory")
+            }
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Mis memorias",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(allMemories) { memory ->
                     MemoryItem(memory = memory, onClick = { onMemoryClick(memory) })
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-        }
-
-        FloatingActionButton(
-            onClick = onAddMemoryClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            Icon(Icons.Filled.Add, contentDescription = "Add Memory")
         }
     }
 }

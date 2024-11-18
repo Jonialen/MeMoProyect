@@ -80,13 +80,13 @@ fun AllMemoriesScreen(
     onProfileClick: () -> Unit,
     viewModel: AllMemoriesViewModel
 ) {
-    // Generar elementos aleatorios al cargar la pantalla
-    LaunchedEffect(Unit) {
+    // Generar elementos aleatorios solo una vez al entrar en la pantalla
+    LaunchedEffect(key1 = "generateRandom") {
         viewModel.generateRandomMemories()
     }
 
-    val allMemories = viewModel.allMemories.value
-    val randomMemories = viewModel.randomMemories.value
+    val allMemories = remember { viewModel.allMemories }
+    val randomMemories = remember { viewModel.randomMemories }
 
     Scaffold(
         topBar = {
@@ -122,7 +122,7 @@ fun AllMemoriesScreen(
                 modifier = Modifier.height(300.dp),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                items(randomMemories, key = { it.id }) { memory ->
+                items(randomMemories.value, key = { it.id }) { memory ->
                     MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
                 }
             }
@@ -135,12 +135,13 @@ fun AllMemoriesScreen(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            MemoriesRow(memories = allMemories.take(allMemories.size / 2), onMemoryClick = onMemoryClick)
+            MemoriesRow(memories = allMemories.value.take(allMemories.value.size / 2), onMemoryClick = onMemoryClick)
             Spacer(modifier = Modifier.height(8.dp))
-            MemoriesRow(memories = allMemories.drop(allMemories.size / 2), onMemoryClick = onMemoryClick)
+            MemoriesRow(memories = allMemories.value.drop(allMemories.value.size / 2), onMemoryClick = onMemoryClick)
         }
     }
 }
+
 
 
 
