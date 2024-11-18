@@ -31,6 +31,6 @@ class AuthRepository {
 
     // Cerrar sesión
     fun logout() {
-        firebaseAuth.signOut()
+        FirebaseAuth.getInstance().signOut()
     }
 }

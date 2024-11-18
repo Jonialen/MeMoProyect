@@ -69,7 +69,10 @@ fun MenuScreen(
 
             // Botón para cerrar sesión
             Button(
-                onClick = onLogoutClick,
+                onClick = {
+                    // Llama a la función de logout
+                    onLogoutClick()
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
             ) {
@@ -80,6 +83,7 @@ fun MenuScreen(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
