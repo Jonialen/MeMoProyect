@@ -3,11 +3,15 @@ package com.epicapp.memo.ui.memoryview.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.twotone.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -15,22 +19,34 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.tooling.preview.Preview
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.SongDO
 import com.epicapp.memo.ui.theme.MeMoTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemoryViewScreen(
     memory: MemoryDO,
     onEditClick: () -> Unit,
     onDeleteClick: (MemoryDO) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Card(
+    Scaffold(
+    topBar = {
+        TopAppBar(
+            title = { Text("Memory Details") }
+        )
+    }
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            // Contenido principal
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
                 // Título de la memoria
                 Text(
                     text = memory.title.ifBlank { "Sin título" },
@@ -66,51 +82,57 @@ fun MemoryViewScreen(
 
                         // Botón para reproducir la canción
                         Button(
-                            onClick = { /* Aquí puedes agregar lógica para reproducir la canción */ },
+                            onClick = { /* Lógica para reproducir la canción */ },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Icon(Icons.TwoTone.Notifications, contentDescription = "Play Music")
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = memory.songTitle.ifBlank { "Canción desconocida" })
+                            Text(text = memory.song.title.ifBlank { "Canción desconocida" })
                         }
                     }
                 }
             }
-        }
 
-        // Botón flotante para editar la memoria
-        FloatingActionButton(
-            onClick = onEditClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            Icon(Icons.Filled.Edit, contentDescription = "Edit Memory")
-        }
+            // Botón flotante en la esquina inferior izquierda
+            FloatingActionButton(
+                onClick = { onDeleteClick(memory) },
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            ) {
+                Icon(Icons.Filled.Delete, contentDescription = "Delete Memory")
+            }
 
-        // Botón flotante para eliminar la memoria
-        FloatingActionButton(
-            onClick = { onDeleteClick(memory) },
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
-        ) {
-            Icon(Icons.Filled.Delete, contentDescription = "Delete Memory")
+            // Botón flotante en la esquina inferior derecha
+            FloatingActionButton(
+                onClick = onEditClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(Icons.Filled.Edit, contentDescription = "Edit Memory")
+            }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 fun MemoryScreensPreview() {
     MeMoTheme {
-        val memory = MemoryDO("1", "Memory 1", "Esta es una descripción más larga para la primera memoria para mostrar cómo se ajusta el texto.", "https://via.placeholder.com/150", "Song 1", "2023-01-01")
+        val memory = MemoryDO(
+            id = "1",
+            title = "Memory 1",
+            description = "Esta es una descripción más larga para la primera memoria para mostrar cómo se ajusta el texto.",
+            imageUrl = "https://via.placeholder.com/150",
+            SongDO("12", "Song G", "Artist Z"),
+            date = "2023-01-01"
+        )
 
         MemoryViewScreen(
             memory = memory,
-            onEditClick = {},
-            onDeleteClick = {} // Función de prueba para eliminar
+            onEditClick = { /* Acción simulada para editar */ },
+            onDeleteClick = { /* Acción simulada para eliminar */ }
         )
     }
 }

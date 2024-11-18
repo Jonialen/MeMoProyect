@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.SongDO
 import com.epicapp.memo.ui.memoryview.repository.MemoryViewRepository
 import com.epicapp.memo.ui.memoryview.view.MemoryViewScreen
 import com.epicapp.memo.ui.memoryview.viewmodel.MemoryViewViewModel
@@ -26,7 +27,7 @@ fun NavGraphBuilder.memoryViewNavGraph(
         val memory = viewModel.getMemory(memoryId)
 
         MemoryViewScreen(
-            memory = memory ?: MemoryDO("", "Memoria no encontrada", "", "", "", ""),
+            memory = memory ?: MemoryDO("", "Memoria no encontrada", "", "", SongDO("", "", ""), ""),
             onEditClick = { navController.navigate("editMemory/$memoryId") },
             onDeleteClick = {
                 val memoryToDelete = viewModel.getMemory(memoryId)

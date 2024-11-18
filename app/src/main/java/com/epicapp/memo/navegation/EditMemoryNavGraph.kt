@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.SongDO
 import com.epicapp.memo.ui.editMemory.repository.MemoryEditRepository
 import com.epicapp.memo.ui.editMemory.view.MemoryEditScreen
 import com.epicapp.memo.ui.editMemory.viewmodel.MemoryEditViewModel
@@ -26,7 +27,7 @@ fun NavGraphBuilder.editMemoryNavGraph(
         )
 
         MemoryEditScreen(
-            memory = memory ?: MemoryDO("", "", "", "", "", ""),
+            memory = memory ?: MemoryDO("", "", "", "", SongDO("", "", ""), ""),
             viewModel = viewModel,
             onConfirmClick = { updatedMemory ->
                 viewModel.saveMemory(updatedMemory)
@@ -43,7 +44,7 @@ fun NavGraphBuilder.editMemoryNavGraph(
         )
 
         MemoryEditScreen(
-            memory = MemoryDO("", "", "", "", "", ""), // Memoria vacía para nueva entrada
+            memory = MemoryDO("", "", "", "", SongDO("", "", ""), ""), // Memoria vacía para nueva entrada
             viewModel = viewModel,
             onConfirmClick = { newMemory ->
                 viewModel.saveMemory(newMemory)

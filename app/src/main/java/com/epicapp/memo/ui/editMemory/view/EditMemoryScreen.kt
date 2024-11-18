@@ -28,6 +28,9 @@ import com.epicapp.memo.ui.editMemory.viewmodel.MemoryEditViewModel
 import com.epicapp.memo.ui.theme.MeMoTheme
 import com.epicapp.memo.utils.network.ImgBBUploader
 import kotlinx.coroutines.launch
+import android.app.DatePickerDialog
+import java.util.Calendar
+
 
 // Lista de canciones para el menú desplegable
 val allSongs = listOf(
@@ -53,11 +56,32 @@ fun MemoryEditScreen(
     var title by remember { mutableStateOf(memory.title) }
     var date by remember { mutableStateOf(memory.date) }
     var description by remember { mutableStateOf(memory.description) }
-    var searchQuery by remember { mutableStateOf(memory.songTitle) }
+    var searchQuery by remember { mutableStateOf(memory.song.title) }
+    var songArtist by remember { mutableStateOf(memory.song.artist) }
+    var songId by remember { mutableStateOf(memory.song.id) }
     var imageUrl by remember { mutableStateOf(memory.imageUrl) }
     var isLoading by remember { mutableStateOf(false) }
     var uploadError by remember { mutableStateOf<String?>(null) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
+
+    // DatePickerDialog
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                // Actualizar la fecha seleccionada
+                date = "$selectedYear-${selectedMonth + 1}-$selectedDay"
+            },
+            year,
+            month,
+            day
+        )
+    }
 
     val filteredSongs = allSongs.filter {
         it.title.contains(searchQuery, ignoreCase = true) ||
@@ -105,7 +129,7 @@ fun MemoryEditScreen(
                         title = title,
                         date = date,
                         description = description,
-                        songTitle = searchQuery,
+                        song = SongDO(songId, searchQuery, songArtist),
                         imageUrl = imageUrl
                     )
                     viewModel.saveMemory(updatedMemory)
@@ -181,15 +205,18 @@ fun MemoryEditScreen(
                 Text("Select Image")
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Campo para la fecha
-            OutlinedTextField(
-                value = date,
-                onValueChange = { date = it },
-                label = { Text("Date") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
+            Text(text = "Fecha seleccionada: $date", style = MaterialTheme.typography.bodyLarge)
+            Button(
+                onClick = { datePickerDialog.show() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Seleccionar Fecha")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Campo para seleccionar una canción
             ExposedDropdownMenuBox(
@@ -216,6 +243,8 @@ fun MemoryEditScreen(
                             text = { Text("${song.title} - ${song.artist}") },
                             onClick = {
                                 searchQuery = song.title
+                                songId = song.id
+                                songArtist = song.artist
                                 isDropdownExpanded = false
                             }
                         )
@@ -236,7 +265,7 @@ fun MemoryEditScreenPreview() {
                 title = "Memory 1",
                 description = "This is a longer description for the first memory.",
                 imageUrl = "https://via.placeholder.com/150",
-                songTitle = "Song 1",
+                song = SongDO("1", "Song 1", "Artist A"),
                 date = "2023-01-01"
             )
         )

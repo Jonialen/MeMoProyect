@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.tooling.preview.Preview
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.SongDO
 import com.epicapp.memo.ui.theme.MeMoTheme
 import com.epicapp.memo.navegacion.view.CustomNavBar  // Importación de CustomNavBar
 
@@ -113,7 +114,7 @@ fun MemoryItem(memory: MemoryDO, onClick: () -> Unit) {
                 ) {
                     Icon(Icons.TwoTone.Notifications, contentDescription = "Play Music")
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = memory.songTitle)
+                    Text(text = memory.song.title)
                 }
             }
         }
@@ -125,10 +126,10 @@ fun MemoryItem(memory: MemoryDO, onClick: () -> Unit) {
 fun DetailMemoryScreenPreview() {
     MeMoTheme {
         val memories = listOf(
-            MemoryDO("1", "Favorite Memory 1", "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
-            MemoryDO("2", "Favorite Memory 2", "Another description for the second memory item in the list.", "https://via.placeholder.com/150", "Song 2", "2023-01-02"),
-            MemoryDO("3", "Favorite Memory 3", "A third memory description to demonstrate the layout with multiple items.", "https://via.placeholder.com/150", "Song 3", "2023-01-03"),
-            MemoryDO("4", "Favorite Memory 4", "A fourth memory description to demonstrate the layout with multiple items.", "https://via.placeholder.com/150", "Song 4", "2023-01-04")
+            MemoryDO("1", "Favorite Memory 1", "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-01"),
+            MemoryDO("2", "Favorite Memory 2", "Another description for the second memory item in the list.", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-02"),
+            MemoryDO("3", "Favorite Memory 3", "A third memory description to demonstrate the layout with multiple items.", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-03"),
+            MemoryDO("4", "Favorite Memory 4", "A fourth memory description to demonstrate the layout with multiple items.", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-04")
         )
 
         DetailMemoriesScreen(

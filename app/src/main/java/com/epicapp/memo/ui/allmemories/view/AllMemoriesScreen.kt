@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -28,6 +29,7 @@ import com.epicapp.memo.R
 import com.epicapp.memo.navegacion.view.CustomNavBar
 import com.epicapp.memo.ui.theme.MeMoTheme
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.SongDO
 import com.epicapp.memo.ui.allmemories.repository.AllMemoriesRepository
 import com.epicapp.memo.ui.allmemories.viewmodel.AllMemoriesViewModel
 
@@ -80,13 +82,22 @@ fun AllMemoriesScreen(
     onProfileClick: () -> Unit,
     viewModel: AllMemoriesViewModel
 ) {
-    // Generar elementos aleatorios solo una vez al entrar en la pantalla
     LaunchedEffect(key1 = "generateRandom") {
         viewModel.generateRandomMemories()
     }
 
     val allMemories = remember { viewModel.allMemories }
     val randomMemories = remember { viewModel.randomMemories }
+
+    val groupedMemories = allMemories.value
+        .sortedByDescending { memory ->
+            try {
+                java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).parse(memory.date)
+            } catch (e: Exception) {
+                null
+            }
+        }
+        .groupBy { it.date }
 
     Scaffold(
         topBar = {
@@ -104,44 +115,67 @@ fun AllMemoriesScreen(
             }
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
         ) {
             // Sección de memorias recomendadas
-            Text(
-                text = "Memorias que te pueden gustar",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = Modifier.height(300.dp),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                items(randomMemories.value, key = { it.id }) { memory ->
-                    MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
+            item {
+                Text(
+                    text = "Memorias que te pueden gustar",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+            }
+            item {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    modifier = Modifier.height(300.dp),
+                    contentPadding = PaddingValues(8.dp)
+                ) {
+                    items(randomMemories.value.take(6), key = { it.id }) { memory ->
+                        MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // Título de "Todas las Memorias"
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Todas las Memorias",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+            }
 
-            // Sección de todas las memorias
-            Text(
-                text = "Todas las Memorias",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            MemoriesRow(memories = allMemories.value.take(allMemories.value.size / 2), onMemoryClick = onMemoryClick)
-            Spacer(modifier = Modifier.height(8.dp))
-            MemoriesRow(memories = allMemories.value.drop(allMemories.value.size / 2), onMemoryClick = onMemoryClick)
+            // Sección de todas las memorias agrupadas por fecha
+            groupedMemories.forEach { (date, memories) ->
+                item {
+                    Text(
+                        text = "Fecha: $date",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+                memories.chunked(3).forEach { chunk ->
+                    item {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(3),
+                            modifier = Modifier.height(150.dp) // Ajusta la altura según lo necesario
+                        ) {
+                            items(chunk, key = { it.id }) { memory ->
+                                MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
-
 
 
 
@@ -150,13 +184,13 @@ fun AllMemoriesScreen(
 fun AllMemoriesScreenPreview() {
     MeMoTheme {
         val favoriteMemories = mutableListOf(
-            MemoryDO("1", "Favorite Memory 1", "Description 1", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
-            MemoryDO("2", "Favorite Memory 2", "Description 2", "https://via.placeholder.com/150", "Song 2", "2023-01-02")
+            MemoryDO("1", "Favorite Memory 1", "Description 1", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-01"),
+            MemoryDO("2", "Favorite Memory 2", "Description 2", "https://via.placeholder.com/150", SongDO("11", "Song H", "Artist Y"), "2023-01-02")
         )
 
         val allMemories = mutableListOf(
-            MemoryDO("7", "Memory 1", "Description 1", "https://via.placeholder.com/150", "Song 1", "2023-01-01"),
-            MemoryDO("8", "Memory 2", "Description 2", "https://via.placeholder.com/150", "Song 2", "2023-01-02")
+            MemoryDO("7", "Memory 1", "Description 1", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-01"),
+            MemoryDO("8", "Memory 2", "Description 2", "https://via.placeholder.com/150", SongDO("11", "Song H", "Artist Y"), "2023-01-02")
         )
 
         AllMemoriesScreen(

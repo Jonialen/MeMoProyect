@@ -5,6 +5,6 @@ data class MemoryDO(
     val title: String,
     val description: String,
     val imageUrl: String,
-    val songTitle: String,
+    val song: SongDO,
     val date: String
 )
