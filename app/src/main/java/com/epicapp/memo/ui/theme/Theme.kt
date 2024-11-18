@@ -1,8 +1,9 @@
-// Theme.kt
 package com.epicapp.memo.ui.theme
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -30,7 +31,7 @@ private val lightScheme = lightColorScheme(
     onTertiaryContainer = onTertiaryContainerLight,
     error = errorLight,
     onError = onErrorLight,
-    background = customBackgroundLight,  // Fondo para tema claro
+    background = customBackgroundLight,
     onBackground = onBackgroundLight,
     surface = surfaceLight,
     onSurface = onSurfaceLight,
@@ -65,7 +66,7 @@ private val darkScheme = darkColorScheme(
     onTertiaryContainer = onTertiaryContainerDark,
     error = errorDark,
     onError = onErrorDark,
-    background = customBackgroundDark,  // Fondo lavanda más oscuro para el tema oscuro
+    background = customBackgroundDark,
     onBackground = onBackgroundDark,
     surface = surfaceDark,
     onSurface = onSurfaceDark,
@@ -87,25 +88,47 @@ private val darkScheme = darkColorScheme(
 @SuppressLint("ObsoleteSdkInt")
 @Composable
 fun MeMoTheme(
-    useDarkTheme: Boolean = false,  // Puedes forzar el tema aquí (true para oscuro, false para claro)
+    darkTheme: Boolean = isSystemInDarkTheme(), // Usa el tema del sistema por defecto
+    // Permite forzar un tema específico si es necesario
+    forceDarkTheme: Boolean? = null,
     content: @Composable () -> Unit
 ) {
-    // Usar directamente los esquemas de color que tú has definido.
+    // Determina el tema a usar
+    val useDarkTheme = forceDarkTheme ?: darkTheme
+
+    // Usa los esquemas de color personalizados, ignorando los colores dinámicos del sistema
     val colors = if (useDarkTheme) darkScheme else lightScheme
 
     MaterialTheme(
         colorScheme = colors,
         content = {
-            // Aquí aplicamos el fondo a toda la app
             Box(
                 modifier = Modifier
-                    .background(color = colors.background) // Establecer el fondo según el tema
+                    .background(color = colors.background)
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 content()
             }
         },
-        typography = TestTypography // Asegúrate de definir tu tipografía personalizada aquí
+        typography = TestTypography
     )
+}
+
+// Preview para tema claro
+@Preview(name = "Light Theme")
+@Composable
+fun LightThemePreview() {
+    MeMoTheme(darkTheme = false) {
+        // Tu contenido de preview aquí
+    }
+}
+
+// Preview para tema oscuro
+@Preview(name = "Dark Theme")
+@Composable
+fun DarkThemePreview() {
+    MeMoTheme(darkTheme = true) {
+        // Tu contenido de preview aquí
+    }
 }

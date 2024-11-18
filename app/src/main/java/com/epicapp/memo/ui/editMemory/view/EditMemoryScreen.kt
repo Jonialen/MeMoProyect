@@ -1,8 +1,13 @@
 package com.epicapp.memo.ui.editMemory.view
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -12,40 +17,74 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import androidx.compose.ui.tooling.preview.Preview
-import com.epicapp.memo.ui.allmemories.view.Memory
+import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.SongDO
+import com.epicapp.memo.ui.editMemory.viewmodel.MemoryEditViewModel
 import com.epicapp.memo.ui.theme.MeMoTheme
+import com.epicapp.memo.utils.network.ImgBBUploader
+import kotlinx.coroutines.launch
 
-data class Song(
-    val id: String,
-    val title: String,
-    val artist: String
+// Lista de canciones para el menú desplegable
+val allSongs = listOf(
+    SongDO("1", "Song 1", "Artist A"),
+    SongDO("2", "Song 2", "Artist B"),
+    SongDO("3", "Song 3", "Artist C"),
+    SongDO("4", "Song 4", "Artist D"),
+    SongDO("5", "Song 5", "Artist E")
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemoryEditScreen(
-    memory: Memory,
-    onConfirmClick: () -> Unit = {},
-    onCancelClick: () -> Unit = {}
+    memory: MemoryDO,
+    viewModel: MemoryEditViewModel,
+    onConfirmClick: (MemoryDO) -> Unit = {},
+    onCancelClick: () -> Unit = {},
 ) {
-    // Lista ficticia de canciones y artistas
-    val allSongs = listOf(
-        Song("1", "Song 1", "Artist A"),
-        Song("2", "Song 2", "Artist B"),
-        Song("3", "Song 1", "Artist C"),
-        Song("4", "Song 4", "Artist A"),
-        Song("5", "Song 5", "Artist C"),
-    )
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    var searchQuery by remember { mutableStateOf("") }
+    // Estados para los campos de entrada
+    var title by remember { mutableStateOf(memory.title) }
+    var date by remember { mutableStateOf(memory.date) }
+    var description by remember { mutableStateOf(memory.description) }
+    var searchQuery by remember { mutableStateOf(memory.songTitle) }
+    var imageUrl by remember { mutableStateOf(memory.imageUrl) }
+    var isLoading by remember { mutableStateOf(false) }
+    var uploadError by remember { mutableStateOf<String?>(null) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
 
-    // Filtrar canciones según el query de búsqueda
     val filteredSongs = allSongs.filter {
         it.title.contains(searchQuery, ignoreCase = true) ||
                 it.artist.contains(searchQuery, ignoreCase = true)
+    }
+
+    // Lanzador para seleccionar imágenes desde la galería
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            isLoading = true
+            scope.launch {
+                ImgBBUploader.uploadImage(
+                    context = context,
+                    imageUri = it,
+                    onSuccess = { uploadedUrl ->
+                        imageUrl = uploadedUrl
+                        isLoading = false
+                    },
+                    onError = { errorMessage ->
+                        uploadError = errorMessage
+                        isLoading = false
+                    }
+                )
+            }
+        }
     }
 
     Column(
@@ -62,72 +101,118 @@ fun MemoryEditScreen(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Campo para el título
                     OutlinedTextField(
-                        value = memory.title,
-                        onValueChange = { /* Update title */ },
+                        value = title,
+                        onValueChange = { title = it },
                         label = { Text("Title") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = 16.dp)
                     )
 
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Column(modifier = Modifier.weight(1f)) {
+                    // Campo para la descripción
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { newDescription -> description = newDescription },
+                        label = { Text("Description") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        minLines = 3
+                    )
+
+                    // Selector de imágenes
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(bottom = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Log.d("MEMO_DEBUG", imageUrl)
+                        if (imageUrl.isNotEmpty()) {
                             Image(
-                                painter = rememberAsyncImagePainter(memory.imageUrl),
+                                painter = rememberAsyncImagePainter(imageUrl),
                                 contentDescription = "Memory Image",
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .padding(end = 16.dp),
+                                modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
-                            OutlinedTextField(
-                                value = memory.date,
-                                onValueChange = { /* Update date */ },
-                                label = { Text("Date") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 4.dp)
+                        } else {
+                            Text(
+                                text = "No image selected",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.align(Alignment.Center)
                             )
                         }
-                        Column(modifier = Modifier.weight(1f)) {
-                            OutlinedTextField(
-                                value = memory.description,
-                                onValueChange = { /* Update description */ },
-                                label = { Text("Description") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp)
-                            )
 
-                            // Campo "Song Title" con búsqueda y lista desplegable
-                            OutlinedTextField(
-                                value = searchQuery,
-                                onValueChange = { newQuery ->
-                                    searchQuery = newQuery
-                                    isDropdownExpanded = true // Mostrar el menú al escribir
-                                },
-                                label = { Text("Song Title") },
-                                modifier = Modifier.fillMaxWidth(),
-                                singleLine = true
-                            )
+                        if (isLoading) {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
+                    }
 
-                            // Mostrar resultados de búsqueda en el DropdownMenu
-                            DropdownMenu(
-                                expanded = isDropdownExpanded && filteredSongs.isNotEmpty(),
-                                onDismissRequest = { isDropdownExpanded = false }
-                            ) {
-                                filteredSongs.forEach { song ->
-                                    DropdownMenuItem(
-                                        text = { Text("${song.title} - ${song.artist}") },
-                                        onClick = {
-                                            // Actualizar el campo de búsqueda con el título seleccionado
-                                            searchQuery = song.title
-                                            isDropdownExpanded = false // Cerrar el menú
-                                        }
-                                    )
-                                }
+                    if (uploadError != null) {
+                        Text(
+                            text = uploadError ?: "",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    Button(
+                        onClick = { galleryLauncher.launch("image/*") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text("Select Image")
+                    }
+                    // Campo para la fecha
+                    OutlinedTextField(
+                        value = date,
+                        onValueChange = { newDate -> date = newDate },
+                        label = { Text("Date") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+
+                    // Campo para seleccionar una canción
+                    ExposedDropdownMenuBox(
+                        expanded = isDropdownExpanded,
+                        onExpandedChange = { isDropdownExpanded = it }
+                    ) {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { newQuery ->
+                                searchQuery = newQuery
+                                isDropdownExpanded = true
+                            },
+                            label = { Text("Song Title") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = isDropdownExpanded,
+                            onDismissRequest = { isDropdownExpanded = false }
+                        ) {
+                            filteredSongs.forEach { song ->
+                                DropdownMenuItem(
+                                    text = { Text("${song.title} - ${song.artist}") },
+                                    onClick = {
+                                        searchQuery = song.title
+                                        isDropdownExpanded = false
+                                    }
+                                )
                             }
                         }
                     }
@@ -135,6 +220,10 @@ fun MemoryEditScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        // Botones de acción
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -149,7 +238,20 @@ fun MemoryEditScreen(
                 Spacer(Modifier.width(8.dp))
                 Text("Cancel")
             }
-            Button(onClick = onConfirmClick) {
+
+            Button(
+                onClick = {
+                    val updatedMemory = memory.copy(
+                        title = title,
+                        date = date,
+                        description = description,
+                        songTitle = searchQuery,
+                        imageUrl = imageUrl
+                    )
+                    viewModel.saveMemory(updatedMemory) // Guardar la memoria usando el ViewModel
+                    onCancelClick() // Regresar al cerrar
+                }
+            ) {
                 Icon(Icons.Filled.Check, contentDescription = "Confirm Edit")
                 Spacer(Modifier.width(8.dp))
                 Text("Confirm")
@@ -158,27 +260,42 @@ fun MemoryEditScreen(
     }
 }
 
-@Composable
-fun SongItem(song: Song) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = "Título: ${song.title}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Artista: ${song.artist}", style = MaterialTheme.typography.bodyMedium)
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
-fun MemoryScreenPreview() {
+fun MemoryEditScreenPreview() {
     MeMoTheme {
-        val memory = Memory("1", "Memory 1", "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.", "https://via.placeholder.com/150", "Song 1", "2023-01-01")
+        // Lista mutable de memorias ficticias
+        val memoryList = mutableListOf(
+            MemoryDO(
+                id = "1",
+                title = "Memory 1",
+                description = "This is a longer description for the first memory to show how the text wraps and fills the space next to the image.",
+                imageUrl = "https://via.placeholder.com/150",
+                songTitle = "Song 1",
+                date = "2023-01-01"
+            ),
+            MemoryDO(
+                id = "2",
+                title = "Memory 2",
+                description = "Another memory for testing the editing functionality.",
+                imageUrl = "https://via.placeholder.com/150",
+                songTitle = "Song 2",
+                date = "2023-01-02"
+            )
+        )
 
-        MemoryEditScreen(memory = memory)
+        // Inicialización del repositorio con la lista ficticia
+        val repository = com.epicapp.memo.ui.editMemory.repository.MemoryEditRepository(memoryList)
+
+        // Inicialización del ViewModel con el repositorio
+        val viewModel = MemoryEditViewModel(repository)
+
+        // Pantalla de edición utilizando el ViewModel
+        MemoryEditScreen(
+            memory = memoryList[0], // Memoria inicial para editar
+            viewModel = viewModel,
+            onCancelClick = { /* Acción simulada al cancelar */ }
+        )
     }
 }

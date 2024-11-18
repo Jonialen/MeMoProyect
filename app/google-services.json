@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12136141791",
+    "project_id": "memoproyect-bba19",
+    "storage_bucket": "memoproyect-bba19.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12136141791:android:522d725dd3193f83fe2a6a",
+        "android_client_info": {
+          "package_name": "com.epicapp.memo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOX8q5PVxv0JRCLSAB8mMsno_-QBRSFDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

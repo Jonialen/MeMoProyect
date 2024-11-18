@@ -8,7 +8,6 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 
 fun NavGraphBuilder.profileNavGraph(navController: NavHostController) {
     composable("profile") {
-
             ProfileScreen()
         }
 
