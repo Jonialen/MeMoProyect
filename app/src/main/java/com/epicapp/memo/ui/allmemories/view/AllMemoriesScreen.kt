@@ -73,11 +73,11 @@ fun MemoriesRow(memories: List<MemoryDO>, onMemoryClick: (MemoryDO) -> Unit) {
 
 @Composable
 fun AllMemoriesScreen(
-    onMemoryClick: (MemoryDO) -> Unit, // Navega a MemoryViewScreen
-    onAddMemoryClick: () -> Unit,   // Navega a MemoryEditScreen (nuevo)
-    onDotClick: () -> Unit,         // Navega a DetailMemoriesScreen
-    onHeartClick: () -> Unit,       // Navega a DetailMemoriesScreen
-    onProfileClick: () -> Unit,      // Navega a MenuScreen
+    onMemoryClick: (MemoryDO) -> Unit,
+    onAddMemoryClick: () -> Unit,
+    onDotClick: () -> Unit,
+    onHeartClick: () -> Unit,
+    onProfileClick: () -> Unit,
     viewModel: AllMemoriesViewModel
 ) {
     // Generar elementos aleatorios al cargar la pantalla
@@ -88,61 +88,60 @@ fun AllMemoriesScreen(
     val allMemories = viewModel.allMemories.value
     val randomMemories = viewModel.randomMemories.value
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        // Barra de navegación personalizada
-        CustomNavBar(
-            onHeartClick = onHeartClick,
-            onProfileClick = onProfileClick
-        )
-
-        // Título y memorias favoritas
-        Text(
-            text = "Memorias que te pueden gustar",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = Modifier.height(300.dp),
-            contentPadding = PaddingValues(8.dp)
-        ) {
-            items(randomMemories, key = { it.id }) { memory ->
-                MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Título y todas las memorias
-        Text(
-            text = "Todas las Memorias",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        MemoriesRow(memories = allMemories.take(allMemories.size / 2), onMemoryClick = onMemoryClick)
-        Spacer(modifier = Modifier.height(8.dp))
-        MemoriesRow(memories = allMemories.drop(allMemories.size / 2), onMemoryClick = onMemoryClick)
-
-        // Botón flotante para agregar nueva memoria
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
+    Scaffold(
+        topBar = {
+            CustomNavBar(
+                onHeartClick = onHeartClick,
+                onProfileClick = onProfileClick
+            )
+        },
+        floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddMemoryClick,
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier.padding(16.dp)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Memory")
             }
         }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Sección de memorias recomendadas
+            Text(
+                text = "Memorias que te pueden gustar",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                modifier = Modifier.height(300.dp),
+                contentPadding = PaddingValues(8.dp)
+            ) {
+                items(randomMemories, key = { it.id }) { memory ->
+                    MemoryCard(memory = memory, onClick = { onMemoryClick(memory) })
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Sección de todas las memorias
+            Text(
+                text = "Todas las Memorias",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            MemoriesRow(memories = allMemories.take(allMemories.size / 2), onMemoryClick = onMemoryClick)
+            Spacer(modifier = Modifier.height(8.dp))
+            MemoriesRow(memories = allMemories.drop(allMemories.size / 2), onMemoryClick = onMemoryClick)
+        }
     }
 }
+
 
 
 @Preview(showBackground = true)
