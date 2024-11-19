@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,17 +78,17 @@ fun MemoriesRow(memories: List<MemoryDO>, onMemoryClick: (MemoryDO) -> Unit) {
 fun AllMemoriesScreen(
     onMemoryClick: (MemoryDO) -> Unit,
     onAddMemoryClick: () -> Unit,
-    onDotClick: () -> Unit,
     onHeartClick: () -> Unit,
     onProfileClick: () -> Unit,
     viewModel: AllMemoriesViewModel
 ) {
-    LaunchedEffect(key1 = "generateRandom") {
-        viewModel.generateRandomMemories()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadMemories()
     }
 
-    val allMemories = remember { viewModel.allMemories }
-    val randomMemories = remember { viewModel.randomMemories }
+    val allMemories = viewModel.allMemories.collectAsState()
+    val randomMemories = viewModel.randomMemories
 
     val groupedMemories = allMemories.value
         .sortedByDescending { memory ->
@@ -176,31 +177,3 @@ fun AllMemoriesScreen(
         }
     }
 }
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun AllMemoriesScreenPreview() {
-    MeMoTheme {
-        val favoriteMemories = mutableListOf(
-            MemoryDO("1", "Favorite Memory 1", "Description 1", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-01"),
-            MemoryDO("2", "Favorite Memory 2", "Description 2", "https://via.placeholder.com/150", SongDO("11", "Song H", "Artist Y"), "2023-01-02")
-        )
-
-        val allMemories = mutableListOf(
-            MemoryDO("7", "Memory 1", "Description 1", "https://via.placeholder.com/150", SongDO("12", "Song G", "Artist Z"), "2023-01-01"),
-            MemoryDO("8", "Memory 2", "Description 2", "https://via.placeholder.com/150", SongDO("11", "Song H", "Artist Y"), "2023-01-02")
-        )
-
-        AllMemoriesScreen(
-            onMemoryClick = { /* Simula navegación */ },
-            onAddMemoryClick = { /* Simula acción */ },
-            onDotClick = { /* Simula acción */ },
-            onHeartClick = { /* Simula acción */ },
-            onProfileClick = { /* Simula acción */ },
-            viewModel = AllMemoriesViewModel(AllMemoriesRepository(allMemories.toMutableList())) // Datos ficticios para vista previa
-        )
-    }
-}
-

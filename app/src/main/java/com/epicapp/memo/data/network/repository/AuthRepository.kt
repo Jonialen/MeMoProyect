@@ -12,7 +12,13 @@ class AuthRepository {
             firebaseAuth.signInWithEmailAndPassword(email, password).await()
             Result.success("Login successful")
         } catch (e: Exception) {
-            Result.failure(e)
+            val errorMessage = when (e.localizedMessage) {
+                "The email address is badly formatted." -> "El correo electrónico no tiene un formato válido."
+                "There is no user record corresponding to this identifier." -> "No existe una cuenta con este correo."
+                "The password is invalid or the user does not have a password." -> "La contraseña es incorrecta."
+                else -> "Error desconocido: ${e.localizedMessage}"
+            }
+            Result.failure(Exception(errorMessage))
         }
     }
 
@@ -22,7 +28,12 @@ class AuthRepository {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             Result.success("User registered successfully")
         } catch (e: Exception) {
-            Result.failure(e)
+            val errorMessage = when (e.localizedMessage) {
+                "The email address is already in use by another account." -> "Este correo ya está registrado."
+                "The email address is badly formatted." -> "El correo no tiene un formato válido."
+                else -> "Error desconocido: ${e.localizedMessage}"
+            }
+            Result.failure(Exception(errorMessage))
         }
     }
 
@@ -33,4 +44,9 @@ class AuthRepository {
     fun logout() {
         FirebaseAuth.getInstance().signOut()
     }
+
+    fun isLoggedIn(): Boolean {
+        return firebaseAuth.currentUser != null
+    }
+
 }

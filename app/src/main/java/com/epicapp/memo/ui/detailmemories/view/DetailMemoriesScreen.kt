@@ -26,7 +26,6 @@ fun DetailMemoriesScreen(
     allMemories: List<MemoryDO>,
     onMemoryClick: (MemoryDO) -> Unit,
     onAddMemoryClick: () -> Unit,
-    onDotClick: () -> Unit,
     onHeartClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
@@ -136,7 +135,6 @@ fun DetailMemoryScreenPreview() {
             allMemories = memories,
             onMemoryClick = {},
             onAddMemoryClick = {},
-            onDotClick = {},
             onHeartClick = {},
             onProfileClick = {}
         )

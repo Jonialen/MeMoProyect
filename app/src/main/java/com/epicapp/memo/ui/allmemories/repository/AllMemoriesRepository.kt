@@ -1,24 +1,14 @@
 package com.epicapp.memo.ui.allmemories.repository
 
-
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.repository.MemoryRepository
 
 class AllMemoriesRepository(
-    private val allMemories: MutableList<MemoryDO>
+    private val memoryRepository: MemoryRepository
 ) {
-    fun getAllMemories() = allMemories
 
-    fun getFavoriteMemories(): List<MemoryDO> {
-        return allMemories.shuffled().take(6)
+    // Obtener todas las memorias desde Firestore
+    suspend fun getAllMemories(): List<MemoryDO> {
+        return memoryRepository.getMemories()
     }
-
-    fun addMemory(memory: MemoryDO) {
-        allMemories.add(memory)
-    }
-
-    fun deleteMemory(memory: MemoryDO) {
-        allMemories.remove(memory)
-    }
-
-
 }

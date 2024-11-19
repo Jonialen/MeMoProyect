@@ -76,6 +76,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.navigation:navigation-compose:2.8.3")
+    implementation(libs.firebase.firestore.ktx)
 
     // Coil (imagenes por internet)
     implementation("io.coil-kt:coil-compose:2.1.0") // Updated to a specific version

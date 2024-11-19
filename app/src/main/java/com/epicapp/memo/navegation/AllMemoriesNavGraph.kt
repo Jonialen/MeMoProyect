@@ -1,11 +1,15 @@
 package com.epicapp.memo.navegation
 
+import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.epicapp.memo.data.network.MemoryDO
+import com.epicapp.memo.data.network.repository.MemoryRepository
 import com.epicapp.memo.ui.allmemories.repository.AllMemoriesRepository
 import com.epicapp.memo.ui.allmemories.view.AllMemoriesScreen
 import com.epicapp.memo.ui.allmemories.viewmodel.AllMemoriesViewModel
@@ -17,19 +21,23 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 
 fun NavGraphBuilder.allMemoriesNavGraph(
     navController: NavHostController,
-    allMemories: MutableList<MemoryDO>,
-    favoriteMemories: List<MemoryDO>
+    memoryRepository: MemoryRepository
 ) {
     composable("allMemories") {
-        // Inicializamos el ViewModel usando la Factory
+        val allMemoriesRepository = AllMemoriesRepository(memoryRepository)
         val viewModel: AllMemoriesViewModel = viewModel(
-            factory = AllMemoriesViewModelFactory(AllMemoriesRepository(allMemories))
+            factory = AllMemoriesViewModelFactory(allMemoriesRepository)
         )
 
         AllMemoriesScreen(
-            onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
+            onMemoryClick = { memory ->
+                if (memory.id.isNotBlank()) {
+                    navController.navigate("memoryView/${memory.id}")
+                } else {
+                    Log.e("NAVIGATION_ERROR", "ID de memoria vacío o inválido")
+                }
+            },
             onAddMemoryClick = { navController.navigate("editMemory") },
-            onDotClick = { navController.navigate("detailMemories") },
             onHeartClick = { navController.navigate("detailMemories") },
             onProfileClick = { navController.navigate("menu") },
             viewModel = viewModel
@@ -37,17 +45,32 @@ fun NavGraphBuilder.allMemoriesNavGraph(
     }
 
     composable("detailMemories") {
+        val allMemoriesRepository = AllMemoriesRepository(memoryRepository)
+        val viewModel: AllMemoriesViewModel = viewModel(
+            factory = AllMemoriesViewModelFactory(allMemoriesRepository)
+        )
+
+        // Recarga las memorias cada vez que regreses
+        LaunchedEffect(Unit) {
+            viewModel.loadMemories()
+        }
+
         DetailMemoriesScreen(
-            allMemories = allMemories,
-            onMemoryClick = { memory -> navController.navigate("memoryView/${memory.id}") },
+            allMemories = viewModel.allMemories.collectAsState().value,
+            onMemoryClick = { memory ->
+                if (memory.id.isNotBlank()) {
+                    navController.navigate("memoryView/${memory.id}")
+                } else {
+                    Log.e("NAVIGATION_ERROR", "ID de memoria vacío")
+                }
+            },
             onAddMemoryClick = { navController.navigate("editMemory") },
-            onDotClick = { navController.navigate("detailMemories") },
             onHeartClick = {
-                navController.popBackStack(
-                    "allMemories",
-                    inclusive = false
-                )
-            }, // Regresar a AllMemoriesScreen
+                val popped = navController.popBackStack("allMemories", inclusive = false)
+                if (!popped) {
+                    Log.e("NAVIGATION_ERROR", "No se pudo regresar a 'allMemories'")
+                }
+            },
             onProfileClick = { navController.navigate("menu") }
         )
     }
