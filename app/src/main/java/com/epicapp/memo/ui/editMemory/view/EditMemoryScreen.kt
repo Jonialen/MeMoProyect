@@ -31,17 +31,12 @@ import kotlinx.coroutines.launch
 import android.app.DatePickerDialog
 import androidx.compose.ui.res.stringResource
 import com.epicapp.memo.R
+import com.epicapp.memo.utils.loadSongsFromJson
 import java.util.Calendar
+import androidx.compose.ui.platform.LocalContext
 
 
-// Lista de canciones para el menú desplegable
-val allSongs = listOf(
-    SongDO("1", "Song 1", "Artist A"),
-    SongDO("2", "Song 2", "Artist B"),
-    SongDO("3", "Song 3", "Artist C"),
-    SongDO("4", "Song 4", "Artist D"),
-    SongDO("5", "Song 5", "Artist E")
-)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +46,10 @@ fun MemoryEditScreen(
     onConfirmClick: (MemoryDO) -> Unit = {},
     onCancelClick: () -> Unit = {},
 ) {
+    val context = LocalContext.current
 
+    // Lista de canciones para el menú desplegable
+    val allSongs: List<SongDO> = loadSongsFromJson(context)
     val memory by viewModel.memory.collectAsState()
 
     LaunchedEffect(memoryId) {

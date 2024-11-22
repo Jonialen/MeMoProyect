@@ -38,7 +38,9 @@ class AuthRepository {
     }
 
     // Obtener usuario actual
-    fun getCurrentUser() = firebaseAuth.currentUser
+    fun getCurrentUserEmail(): String? {
+        return firebaseAuth.currentUser?.email
+    }
 
     // Cerrar sesión
     fun logout() {

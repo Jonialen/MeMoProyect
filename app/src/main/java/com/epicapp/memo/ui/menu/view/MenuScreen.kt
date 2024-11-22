@@ -48,7 +48,7 @@ fun MenuScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(stringResource(R.string.profile))
             }
-
+            /*
             // Botón para exportar
             Button(
                 onClick = onExportClick,
@@ -67,7 +67,7 @@ fun MenuScreen(
                 Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Import")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(stringResource(R.string.import_label))
-            }
+            }*/
 
             // Botón para cerrar sesión
             Button(

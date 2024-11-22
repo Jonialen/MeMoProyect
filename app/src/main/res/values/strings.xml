@@ -42,4 +42,5 @@
     <string name="select_date">Seleccionar Fecha</string>
     <string name="email_placeholder">Ingrese su correo electrónico</string>
     <string name="password_placeholder">Ingrese una nueva contraseña</string>
+    <string name="no_email_found">Correo no encontrado</string>
 </resources>

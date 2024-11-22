@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     menuNavGraph(navController)
 
                     // Gráfico de navegación para el perfil del usuario (si aplica)
-                    profileNavGraph(navController)
+                    profileNavGraph(navController, authRepository)
                 }
             }
         }
