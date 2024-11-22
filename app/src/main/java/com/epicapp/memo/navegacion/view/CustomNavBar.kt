@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.epicapp.memo.ui.theme.topBarColorLight
 import com.epicapp.memo.ui.theme.topBarColorDark
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.res.stringResource
+import com.epicapp.memo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +38,7 @@ fun CustomNavBar(
             IconButton(onClick = onHeartClick) {
                 Icon(
                     Icons.Rounded.Favorite,
-                    contentDescription = "Favorito",
+                    contentDescription = stringResource(R.string.detail_memories),
                     tint = Color.Black
                 )
             }
@@ -45,7 +47,7 @@ fun CustomNavBar(
             IconButton(onClick = onProfileClick) {
                 Icon(
                     Icons.Filled.Person,
-                    contentDescription = "Perfil",
+                    contentDescription = stringResource(R.string.profile),
                     tint = Color.Black
                 )
             }

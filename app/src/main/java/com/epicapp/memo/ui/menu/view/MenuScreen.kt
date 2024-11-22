@@ -10,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.epicapp.memo.R
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +27,7 @@ fun MenuScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Menú") }
+                title = { Text(stringResource(R.string.menu)) }
             )
         }
     ) { paddingValues ->
@@ -44,7 +46,7 @@ fun MenuScreen(
             ) {
                 Icon(Icons.Filled.Person, contentDescription = "Profile")
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Perfil")
+                Text(stringResource(R.string.profile))
             }
 
             // Botón para exportar
@@ -54,7 +56,7 @@ fun MenuScreen(
             ) {
                 Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Export")
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Exportar")
+                Text(stringResource(R.string.export))
             }
 
             // Botón para importar
@@ -64,7 +66,7 @@ fun MenuScreen(
             ) {
                 Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Import")
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Importar")
+                Text(stringResource(R.string.import_label))
             }
 
             // Botón para cerrar sesión
@@ -78,7 +80,7 @@ fun MenuScreen(
             ) {
                 Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Cerrar sesión")
+                Text(stringResource(R.string.logout))
             }
         }
     }

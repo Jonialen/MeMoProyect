@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import com.epicapp.memo.R
@@ -35,10 +36,10 @@ fun SignInScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Crear Cuenta") },
+                title = { Text(stringResource(R.string.create_account)) },
                 navigationIcon = {
                     IconButton(onClick = onBackToLoginClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Regresar")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.go_back))
                     }
                 }
             )
@@ -69,8 +70,8 @@ fun SignInScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
-                placeholder = { Text("Ingrese su correo") },
+                label = { Text(stringResource(R.string.email)) },
+                placeholder = { Text(stringResource(R.string.enter_email)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 singleLine = true
@@ -82,8 +83,8 @@ fun SignInScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
-                placeholder = { Text("Ingrese su contraseña") },
+                label = { Text(stringResource(R.string.password)) },
+                placeholder = { Text(stringResource(R.string.enter_password)) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -109,7 +110,7 @@ fun SignInScreen(
                     }
                 } else if (result.isFailure) {
                     Text(
-                        text = "Error: ${result.exceptionOrNull()?.localizedMessage ?: "Unknown error"}",
+                        text = stringResource(R.string.error_message, result.exceptionOrNull()?.localizedMessage ?: stringResource(R.string.unknown_error)),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 8.dp)
@@ -126,7 +127,7 @@ fun SignInScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Crear Cuenta")
+                Text(stringResource(R.string.create_account))
             }
         }
     }

@@ -29,6 +29,8 @@ import com.epicapp.memo.ui.theme.MeMoTheme
 import com.epicapp.memo.utils.network.ImgBBUploader
 import kotlinx.coroutines.launch
 import android.app.DatePickerDialog
+import androidx.compose.ui.res.stringResource
+import com.epicapp.memo.R
 import java.util.Calendar
 
 
@@ -127,10 +129,10 @@ fun MemoryEditScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Edit Memory") },
+                    title = { Text(stringResource(R.string.edit_memory)) },
                     navigationIcon = {
                         IconButton(onClick = onCancelClick) {
-                            Icon(Icons.Filled.Close, contentDescription = "Cancel Edit")
+                            Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cancel_edit))
                         }
                     }
                 )
@@ -149,7 +151,7 @@ fun MemoryEditScreen(
                         onConfirmClick(updatedMemory) // Llamar al callback de confirmación
                     }
                 ) {
-                    Icon(Icons.Filled.Check, contentDescription = "Save Memory")
+                    Icon(Icons.Filled.Check, contentDescription = stringResource(R.string.save_memory))
                 }
             }
         ) { paddingValues ->
@@ -164,7 +166,7 @@ fun MemoryEditScreen(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Title") },
+                    label = { Text(stringResource(R.string.title)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
@@ -174,7 +176,7 @@ fun MemoryEditScreen(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(R.string.description)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
@@ -192,13 +194,13 @@ fun MemoryEditScreen(
                     if (imageUrl.isNotEmpty()) {
                         Image(
                             painter = rememberAsyncImagePainter(imageUrl),
-                            contentDescription = "Memory Image",
+                            contentDescription = stringResource(R.string.memory_image),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
                     } else {
                         Text(
-                            text = "No image selected",
+                            text = stringResource(R.string.no_image_selected),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.align(Alignment.Center)
                         )
@@ -215,7 +217,7 @@ fun MemoryEditScreen(
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
-                    Text("Select Image")
+                    Text(stringResource(R.string.select_image))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -226,7 +228,7 @@ fun MemoryEditScreen(
                     onClick = { datePickerDialog.show() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Seleccionar Fecha")
+                    Text(text = stringResource(R.string.selected_date, date), style = MaterialTheme.typography.bodyLarge)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -239,7 +241,7 @@ fun MemoryEditScreen(
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
-                        label = { Text("Song Title") },
+                        label = { Text(stringResource(R.string.song_title)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor(),

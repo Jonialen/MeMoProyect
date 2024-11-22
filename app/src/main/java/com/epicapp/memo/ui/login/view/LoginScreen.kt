@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -47,7 +48,7 @@ fun LoginScreen(
             painter = painterResource(
                 id = if (isDarkTheme) R.drawable.logo_memo_dark else R.drawable.logo_memo_light
             ),
-            contentDescription = "App Logo",
+            contentDescription = stringResource(R.string.app_logo),
             modifier = Modifier
                 .size(400.dp)
                 .padding(bottom = 32.dp)
@@ -55,7 +56,7 @@ fun LoginScreen(
 
         // Texto de bienvenida
         Text(
-            text = "Welcome to MEMO",
+            text = stringResource(R.string.welcome_message),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -64,7 +65,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.email)) },
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Email Icon") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier
@@ -76,7 +77,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
             trailingIcon = {
                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
@@ -118,12 +119,12 @@ fun LoginScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Login")
+            Text(stringResource(R.string.login))
         }
 
         // Botón para crear cuenta
         TextButton(onClick = onCreateAccountClick) {
-            Text("Create an Account", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.create_account))
         }
     }
 }

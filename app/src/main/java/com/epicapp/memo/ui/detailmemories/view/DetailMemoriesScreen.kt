@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.tooling.preview.Preview
+import com.epicapp.memo.R
 import com.epicapp.memo.data.network.MemoryDO
 import com.epicapp.memo.data.network.SongDO
 import com.epicapp.memo.ui.theme.MeMoTheme
@@ -41,7 +43,7 @@ fun DetailMemoriesScreen(
                 onClick = onAddMemoryClick,
                 modifier = Modifier.padding(16.dp)
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Memory")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_memory))
             }
         }
     ) { paddingValues ->
@@ -52,7 +54,7 @@ fun DetailMemoriesScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Mis memorias",
+                text = stringResource(R.string.my_memories),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -81,7 +83,7 @@ fun MemoryItem(memory: MemoryDO, onClick: () -> Unit) {
             Column {
                 Image(
                     painter = rememberAsyncImagePainter(memory.imageUrl),
-                    contentDescription = "Memory Image",
+                    contentDescription = stringResource(R.string.memory_image),
                     modifier = Modifier
                         .size(120.dp)
                         .padding(end = 16.dp),
@@ -111,7 +113,8 @@ fun MemoryItem(memory: MemoryDO, onClick: () -> Unit) {
                     onClick = { /* Play music */ },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.TwoTone.Notifications, contentDescription = "Play Music")
+                    Icon(Icons.TwoTone.Notifications, contentDescription = stringResource(R.string.play_music))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = memory.song.title)
                 }

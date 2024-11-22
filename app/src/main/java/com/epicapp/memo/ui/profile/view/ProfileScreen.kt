@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.epicapp.memo.R
 import com.epicapp.memo.ui.theme.MeMoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +26,7 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Perfil") },
+                title = { Text(stringResource(R.string.profile)) },
             )
         }
     ) { paddingValues ->
@@ -43,7 +45,7 @@ fun ProfileScreen(
             ) {
                 Icon(
                     Icons.Filled.Person,
-                    contentDescription = "Profile Picture",
+                    contentDescription = stringResource(R.string.profile_picture),
                     modifier = Modifier.size(100.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -55,7 +57,7 @@ fun ProfileScreen(
                 TextField(
                     value = email,
                     onValueChange = { /* Actualiza el estado */ },
-                    placeholder = { Text("Ingrese su correo electrónico") },
+                    placeholder = { Text(stringResource(R.string.enter_email)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -66,7 +68,7 @@ fun ProfileScreen(
                 TextField(
                     value = password,
                     onValueChange = { /* Actualiza el estado */ },
-                    placeholder = { Text("Ingrese una nueva contraseña") },
+                    placeholder = { Text(stringResource(R.string.enter_password)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -77,7 +79,7 @@ fun ProfileScreen(
                 onClick = { onSaveClick(email, password) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Guardar cambios")
+                Text(stringResource(R.string.save_changes))
             }
         }
     }

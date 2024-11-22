@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -112,7 +113,7 @@ fun AllMemoriesScreen(
                 onClick = onAddMemoryClick,
                 modifier = Modifier.padding(16.dp)
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Memory")
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_memory))
             }
         }
     ) { paddingValues ->
@@ -125,7 +126,7 @@ fun AllMemoriesScreen(
             // Sección de memorias recomendadas
             item {
                 Text(
-                    text = "Memorias que te pueden gustar",
+                    text = stringResource(R.string.recommended_memories),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
@@ -146,7 +147,7 @@ fun AllMemoriesScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Todas las Memorias",
+                   text = stringResource(R.string.all_memories),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
@@ -156,7 +157,7 @@ fun AllMemoriesScreen(
             groupedMemories.forEach { (date, memories) ->
                 item {
                     Text(
-                        text = "Fecha: $date",
+                        text = stringResource(R.string.date_label, date),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
